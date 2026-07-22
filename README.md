@@ -38,6 +38,19 @@ NEW_ADMIN_PASSWORD="새 비밀번호" npm run admin:hash
 
 출력된 값을 `ADMIN_PASSWORD_HASH`에 등록합니다. 배포 환경에서는 호스팅 서비스의 보안 환경변수 기능을 사용해야 합니다.
 
+## GitHub push 자동 배포
+
+`main` 브랜치에 push하면 GitHub Actions가 빌드와 테스트를 실행한 뒤 Cloudflare Workers로 배포합니다. 저장소의 `Settings → Secrets and variables → Actions`에 아래 Repository secrets를 등록해야 합니다.
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_D1_DATABASE_ID`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD_HASH`
+- `SESSION_SECRET`
+
+선택적으로 Repository variable `CLOUDFLARE_D1_DATABASE_NAME`을 등록할 수 있으며, 생략하면 `daedong-great-journey-db`를 사용합니다. Cloudflare 정보가 없는 동안 자동 배포 작업은 실행되지 않습니다.
+
 ## 데이터와 개인정보
 
 이름, 소속회사, 사번, 퀴즈 결과와 Vision Map은 교육 참여 이력 관리를 위해 저장됩니다. 공개 통계에는 10명 이상 집계된 결과만 표시하며 원본 참여 정보는 관리자에게만 제공됩니다.
