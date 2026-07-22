@@ -20,17 +20,16 @@ CREATE TABLE IF NOT EXISTS public.submissions (
 -- Enable RLS
 ALTER TABLE public.submissions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public insert to submissions" ON public.submissions;
+DROP POLICY IF EXISTS "Allow public select on submissions" ON public.submissions;
+DROP POLICY IF EXISTS "Allow delete to submissions" ON public.submissions;
+
 CREATE POLICY "Allow public insert to submissions"
   ON public.submissions FOR INSERT
   WITH CHECK (true);
 
-CREATE POLICY "Allow public select on submissions"
-  ON public.submissions FOR SELECT
-  USING (true);
-
-CREATE POLICY "Allow delete to submissions"
-  ON public.submissions FOR DELETE
-  USING (true);
+-- Public visitors can only add their own result. Raw records remain private.
+-- Aggregate statistics are exposed through a dedicated function below.
 
 -- 2. Questions Table
 CREATE TABLE IF NOT EXISTS public.questions (
@@ -50,13 +49,38 @@ CREATE TABLE IF NOT EXISTS public.questions (
 -- Enable RLS
 ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public select on questions" ON public.questions;
+DROP POLICY IF EXISTS "Allow write to questions" ON public.questions;
+
 CREATE POLICY "Allow public select on questions"
   ON public.questions FOR SELECT
   USING (true);
 
-CREATE POLICY "Allow write to questions"
-  ON public.questions FOR ALL
-  USING (true);
+-- Question changes must go through the authenticated administrator API.
+
+CREATE OR REPLACE FUNCTION public.get_public_stats()
+RETURNS TABLE(total_count BIGINT, value_type TEXT, value_count BIGINT)
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  WITH totals AS (
+    SELECT COUNT(*)::BIGINT AS total_count FROM public.submissions
+  ), grouped AS (
+    SELECT submissions.value_type, COUNT(*)::BIGINT AS value_count
+    FROM public.submissions
+    GROUP BY submissions.value_type
+  )
+  SELECT
+    totals.total_count,
+    CASE WHEN totals.total_count >= 10 THEN grouped.value_type ELSE NULL END,
+    CASE WHEN totals.total_count >= 10 THEN grouped.value_count ELSE NULL END
+  FROM totals
+  LEFT JOIN grouped ON totals.total_count >= 10;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_public_stats() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_public_stats() TO anon, authenticated;
 
 -- 3. Initial Seed Data for Questions
 INSERT INTO public.questions (id, type, category, question, options, correct_index, explanation, image, sort_order)

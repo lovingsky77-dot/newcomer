@@ -1,7 +1,8 @@
 "use client";
 
+/* eslint-disable @next/next/no-html-link-for-pages */
+
 import { useEffect, useMemo, useState } from "react";
-import { deleteSubmissionFromSupabase, fetchAdminSubmissionsFromSupabase, isSupabaseConfigured, saveQuestionToSupabase } from "../../lib/supabase";
 import type { QuizQuestion } from "../../lib/content";
 
 type Submission = {
@@ -23,24 +24,20 @@ export default function AdminPage() {
   const [organization, setOrganization] = useState("전체");
 
   async function loadData() {
-    try {
-      const data = await fetchAdminSubmissionsFromSupabase();
+    const response = await fetch("/api/admin/data");
+    if (response.ok) {
+      const data = await response.json();
       setSubmissions(data.submissions);
       setQuestions(data.questions);
       setStatus("ready");
       return;
-    } catch {
-      if (isSupabaseConfigured) {
-        setStatus("ready");
-        return;
-      }
     }
     const config = await fetch("/api/admin/login").then((item) => item.json()).catch(() => ({ configured: false }));
     setStatus(config.configured ? "login" : "config");
   }
 
   useEffect(() => {
-    loadData();
+    const loadTimer = window.setTimeout(() => { void loadData(); }, 0);
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setSelected(null);
@@ -48,7 +45,10 @@ export default function AdminPage() {
       }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.clearTimeout(loadTimer);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const filtered = useMemo(() => submissions.filter((item) => {
@@ -72,19 +72,19 @@ export default function AdminPage() {
     setCredentials({ email: "", password: "" }); await loadData();
   }
 
-  async function logout() { await fetch("/api/admin/logout").catch(() => undefined); setSubmissions([]); setStatus("login"); }
+  async function logout() { await fetch("/api/admin/logout", { method: "POST" }); setSubmissions([]); setStatus("login"); }
 
   async function removeSubmission(id: string) {
     if (!confirm("이 참여 기록을 삭제할까요? 삭제 후에는 복구할 수 없습니다.")) return;
-    const ok = await deleteSubmissionFromSupabase(id);
-    if (ok) { setSelected(null); await loadData(); }
+    const response = await fetch("/api/admin/data", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
+    if (response.ok) { setSelected(null); await loadData(); }
   }
 
   async function saveQuestion(event: React.FormEvent) {
     event.preventDefault();
     if (!editing) return;
-    const ok = await saveQuestionToSupabase(editing);
-    if (ok) { setEditing(null); await loadData(); }
+    const response = await fetch("/api/admin/data", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(editing) });
+    if (response.ok) { setEditing(null); await loadData(); }
     else setError("문항을 저장하지 못했습니다.");
   }
 

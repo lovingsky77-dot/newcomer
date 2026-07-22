@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { defaultQuestions, type QuizQuestion } from "./content";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const supabaseUrl =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SUPABASE_URL) ||
   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_SUPABASE_URL) ||
@@ -39,7 +41,7 @@ export async function submitQuizToSupabase(payload: {
     return response.json();
   }
 
-  const { data, error } = await supabase.from("submissions").insert([
+  const { error } = await supabase.from("submissions").insert([
     {
       name: payload.name,
       organization: payload.organization,
@@ -53,10 +55,10 @@ export async function submitQuizToSupabase(payload: {
       vision_text: payload.visionText,
       answers_json: payload.answers,
     },
-  ]).select();
+  ]);
 
   if (error) throw error;
-  return data?.[0];
+  return { saved: true };
 }
 
 export async function fetchQuizFromSupabase(): Promise<QuizQuestion[]> {
@@ -100,34 +102,24 @@ export async function fetchStatsFromSupabase() {
     return { published: false, count: 0, remaining: 10 };
   }
 
-  const { data, error, count } = await supabase
-    .from("submissions")
-    .select("value_type", { count: "exact" });
+  const { data, error } = await supabase.rpc("get_public_stats");
 
-  if (error || count === null) {
+  if (error || !Array.isArray(data) || data.length === 0) {
     return { published: false, count: 0, remaining: 10 };
   }
 
-  const totalCount = count || 0;
+  const totalCount = Number(data[0]?.total_count || 0);
   const published = totalCount >= 10;
   const remaining = Math.max(0, 10 - totalCount);
-
-  const valueCounts: Record<string, number> = {};
-  data?.forEach((row: any) => {
-    if (row.value_type) {
-      valueCounts[row.value_type] = (valueCounts[row.value_type] || 0) + 1;
-    }
-  });
-
-  const valueStats = Object.entries(valueCounts)
-    .map(([valueType, count]) => ({ valueType, count }))
-    .sort((a, b) => b.count - a.count);
+  const valueStats = published
+    ? data.filter((row: any) => row.value_type).map((row: any) => ({ valueType: row.value_type, count: Number(row.value_count || 0) }))
+    : undefined;
 
   return {
     published,
     count: totalCount,
     remaining,
-    values: published ? valueStats : undefined,
+    values: valueStats,
   };
 }
 

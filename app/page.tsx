@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../lib/content";
 import { fetchQuizFromSupabase, fetchStatsFromSupabase, submitQuizToSupabase } from "../lib/supabase";
 
@@ -20,6 +20,13 @@ const futureBusinesses = [
 ];
 
 const strengths = ["관찰력", "실행력", "문제해결", "소통", "분석력", "도전정신", "협업", "책임감"];
+
+const valueDescription = {
+  창조: "새로운 가능성을 먼저 발견하는 미래 설계자",
+  신뢰: "사람과 아이디어를 연결하는 든든한 파트너",
+  열정: "변화의 끝까지 에너지를 이어가는 실행가",
+  책임: "맡은 결과를 단단하게 완성하는 현장 리더",
+};
 
 type PublicStats = { published: boolean; count: number; remaining?: number; values?: Array<{ valueType: string; count: number }> };
 
@@ -227,13 +234,6 @@ export default function Home() {
   const currentQuestion = quizStep >= 0 ? quizQuestions[quizStep] : null;
   const journey = schedules[activeDay];
   const progress = quizStep < 0 ? 0 : ((quizStep + 1) / quizQuestions.length) * 100;
-
-  const valueDescription = useMemo(() => ({
-    창조: "새로운 가능성을 먼저 발견하는 미래 설계자",
-    신뢰: "사람과 아이디어를 연결하는 든든한 파트너",
-    열정: "변화의 끝까지 에너지를 이어가는 실행가",
-    책임: "맡은 결과를 단단하게 완성하는 현장 리더",
-  }), []);
 
   function toggleChoice(list: string[], setter: (next: string[]) => void, value: string) {
     if (list.includes(value)) setter(list.filter((item) => item !== value));
