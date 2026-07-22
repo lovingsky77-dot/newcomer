@@ -130,15 +130,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .vision-submit:hover span{color:#fff;transform:translateX(4px)}
 
 /* Fine-pointer only: Daedong red field cursor */
-.daedong-cursor{position:fixed;z-index:1000;left:0;top:0;width:30px;height:30px;opacity:0;pointer-events:none;translate:-50% -50%;transform:translate3d(-100px,-100px,0);transition:width .18s ease,height .18s ease,opacity .15s ease;will-change:transform}
-.daedong-cursor::before{content:"";position:absolute;inset:-50%;border:1px solid rgba(239,63,35,.55);border-radius:50%;transform:scale(.62);transition:transform .18s ease,background-color .18s ease}
-.daedong-cursor span{position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:3px 9px 3px 9px;background:var(--red);box-shadow:0 0 0 2px rgba(255,255,255,.85);transform:translate(-50%,-50%) rotate(45deg);transition:transform .18s ease}
-.daedong-cursor span::after{content:"";position:absolute;inset:4px 2px;background:repeating-linear-gradient(90deg,#111 0 1px,transparent 1px 3px);border-radius:2px}
+.daedong-cursor{position:fixed;z-index:1000;left:0;top:0;width:46px;height:46px;opacity:0;pointer-events:none;translate:-50% -50%;transform:translate3d(-100px,-100px,0);transition:width .18s ease,height .18s ease,opacity .15s ease;will-change:transform}
+.daedong-cursor::before{content:"";position:absolute;inset:-8px;border:1px solid rgba(239,63,35,.48);border-radius:50%;transform:scale(.5);opacity:0;transition:transform .18s ease,background-color .18s ease,opacity .18s ease}
+.daedong-cursor span{position:absolute;inset:0;background:url('/images/tractor-cursor.png') center/contain no-repeat;filter:drop-shadow(0 4px 5px rgba(0,0,0,.3));transform:rotate(-7deg) scale(.92);transform-origin:center;transition:transform .18s ease,filter .18s ease}
+.daedong-cursor span::after{display:none}
 .daedong-cursor.is-visible{opacity:1}
-.daedong-cursor.is-active{width:46px;height:46px}
-.daedong-cursor.is-active::before{transform:scale(1);background:rgba(239,63,35,.1)}
-.daedong-cursor.is-active span{transform:translate(-50%,-50%) rotate(90deg) scale(.85)}
-.daedong-cursor.is-pressed span{transform:translate(-50%,-50%) rotate(90deg) scale(.62)}
+.daedong-cursor.is-active{width:62px;height:62px}
+.daedong-cursor.is-active::before{transform:scale(1);background:rgba(239,63,35,.08);opacity:1}
+.daedong-cursor.is-active span{transform:rotate(0deg) scale(1)}
+.daedong-cursor.is-pressed span{transform:rotate(0deg) scale(.82);filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
 html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-enabled button{cursor:none!important}
 
 @media(max-width:1000px){
