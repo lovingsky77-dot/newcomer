@@ -29,6 +29,7 @@ footer{padding:50px max(5.5vw,28px) 24px;background:#fff;display:grid;grid-templ
 .schedule-list article>div{min-width:0}
 .schedule-list article.vision-item{background:linear-gradient(90deg,rgba(239,60,35,.08),rgba(239,60,35,0) 72%);box-shadow:inset 4px 0 0 var(--red)}
 .schedule-list article img,.schedule-list article picture,.schedule-list article figure{display:none!important}
+.type.type-vision{background:var(--cream)}
 
 /* 2026 Daedong visual refresh — official-site typography and restrained brand language */
 :root{--red:#ef3f23;--ink:#111;--paper:#f7f7f4;--line:#d9d9d4;--muted:#62635f}

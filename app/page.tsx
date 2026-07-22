@@ -192,7 +192,7 @@ export default function Home() {
         <div className="schedule-panel">
           <div className="schedule-intro"><p>{activeDay}</p><h3>{journey.theme}</h3><span>PLACE</span><strong>{journey.place}</strong></div>
           <div className="schedule-list">
-            {journey.items.map((item) => <article className={`schedule-item ${item.type === "vision" ? "vision-item" : ""}`} key={`${item.time}-${item.title}`}><time>{item.time}</time><div><span className={`type ${item.type}`}>{({ welcome: "WELCOME", business: "BUSINESS", move: "MOVE", experience: "EXPERIENCE", vision: "VISIONING" })[item.type]}</span><h4>{item.title}</h4>{item.detail && <p>{item.detail}</p>}</div></article>)}
+            {journey.items.map((item) => <article className={`schedule-item ${item.type === "vision" ? "vision-item" : ""}`} key={`${item.time}-${item.title}`}><time>{item.time}</time><div><span className={`type ${item.type === "vision" ? "type-vision" : item.type}`}>{({ welcome: "WELCOME", business: "BUSINESS", move: "MOVE", experience: "EXPERIENCE", vision: "VISIONING" })[item.type]}</span><h4>{item.title}</h4>{item.detail && <p>{item.detail}</p>}</div></article>)}
           </div>
         </div>
         <div className="route-line"><span>서울사무소</span><i /><span>동부권역센터</span><i /><span>창녕 비전캠퍼스</span><i /><span>성서통합R&D센터</span><i /><span>각 사업장</span><i /><span>그룹시험센터</span></div>
