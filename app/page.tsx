@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../lib/content";
 
 const values = [
@@ -123,13 +123,21 @@ export default function Home() {
     else setQuizStep((step) => step + 1);
   }
 
+  function scrollToSection(event: MouseEvent<HTMLAnchorElement>, sectionId: string) {
+    event.preventDefault();
+    const target = document.getElementById(sectionId);
+    if (!target) return;
+    window.history.replaceState(null, "", `#${sectionId}`);
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <main>
       <div className="daedong-cursor" ref={cursorRef} aria-hidden="true"><span /></div>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
+        <a className="brand" href="#top" onClick={(event) => scrollToSection(event, "top")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
         <nav aria-label="주요 메뉴">
-          <a href="#journey">5일의 여정</a><a href="#future">미래사업</a><a href="#vision">Vision Map</a>
+          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a>
         </nav>
         <button className="header-cta" onClick={openQuiz}>대동인 챌린지 <span>↗</span></button>
       </header>
@@ -143,7 +151,7 @@ export default function Home() {
           <h1>대동에서 시작하는<br /><em>Great Journey</em></h1>
           <p className="hero-copy">농업의 미래를 이해하고,<br className="mobile-only" /> 나의 미래를 설계하는 5일</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#journey">여정 시작하기 <span>↓</span></a>
+            <a className="primary-button" href="#journey" onClick={(event) => scrollToSection(event, "journey")}>여정 시작하기 <span>↓</span></a>
             <button className="text-button" onClick={() => setVideoOpen(true)}><span className="play">▶</span> 30초로 만나는 대동의 미래</button>
           </div>
         </div>
@@ -184,7 +192,7 @@ export default function Home() {
         <div className="schedule-panel">
           <div className="schedule-intro"><p>{activeDay}</p><h3>{journey.theme}</h3><span>PLACE</span><strong>{journey.place}</strong></div>
           <div className="schedule-list">
-            {journey.items.map((item) => <article key={`${item.time}-${item.title}`}><time>{item.time}</time><div><span className={`type ${item.type}`}>{({ welcome: "WELCOME", business: "BUSINESS", move: "MOVE", experience: "EXPERIENCE", vision: "VISIONING" })[item.type]}</span><h4>{item.title}</h4>{item.detail && <p>{item.detail}</p>}</div></article>)}
+            {journey.items.map((item) => <article className={`schedule-item ${item.type === "vision" ? "vision-item" : ""}`} key={`${item.time}-${item.title}`}><time>{item.time}</time><div><span className={`type ${item.type}`}>{({ welcome: "WELCOME", business: "BUSINESS", move: "MOVE", experience: "EXPERIENCE", vision: "VISIONING" })[item.type]}</span><h4>{item.title}</h4>{item.detail && <p>{item.detail}</p>}</div></article>)}
           </div>
         </div>
         <div className="route-line"><span>서울사무소</span><i /><span>동부권역센터</span><i /><span>창녕 비전캠퍼스</span><i /><span>성서통합R&D센터</span><i /><span>각 사업장</span><i /><span>그룹시험센터</span></div>
