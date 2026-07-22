@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../lib/content";
+import { fetchQuizFromSupabase, fetchStatsFromSupabase, submitQuizToSupabase } from "../lib/supabase";
 
 const values = [
   { name: "창조", en: "CREATIVITY", copy: "익숙한 방식 너머의 가능성을 발견합니다." },
@@ -39,9 +40,23 @@ export default function Home() {
   const [submitState, setSubmitState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [stats, setStats] = useState<PublicStats>({ published: false, count: 0, remaining: 10 });
 
+  const [toastMsg, setToastMsg] = useState("");
+
   useEffect(() => {
-    fetch("/api/quiz").then((response) => response.ok ? response.json() : null).then((data) => data?.questions?.length && setQuizQuestions(data.questions)).catch(() => undefined);
-    fetch("/api/stats").then((response) => response.ok ? response.json() : null).then((data) => data && setStats(data)).catch(() => undefined);
+    fetchQuizFromSupabase().then((questions) => questions?.length && setQuizQuestions(questions)).catch(() => undefined);
+    fetchStatsFromSupabase().then((nextStats) => nextStats && setStats(nextStats)).catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setVideoOpen(false);
+        setPrivacyOpen(false);
+        setQuizOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   useEffect(() => {
@@ -73,6 +88,141 @@ export default function Home() {
       document.documentElement.removeEventListener("mouseleave", hideCursor);
     };
   }, []);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 3500);
+  };
+
+  const downloadCardPNG = () => {
+    if (!result) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = 800;
+    canvas.height = 960;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const bgGrad = ctx.createLinearGradient(0, 0, 800, 960);
+    bgGrad.addColorStop(0, "#111310");
+    bgGrad.addColorStop(0.5, "#182017");
+    bgGrad.addColorStop(1, "#0a0e0a");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 960);
+
+    ctx.strokeStyle = "#ef4023";
+    ctx.lineWidth = 6;
+    ctx.strokeRect(24, 24, 752, 912);
+
+    ctx.strokeStyle = "rgba(255,255,255,0.15)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(34, 34, 732, 892);
+
+    ctx.fillStyle = "#ef4023";
+    ctx.font = "bold 16px 'Noto Sans KR', sans-serif";
+    ctx.fillText("AI TO THE FIELD · GREAT JOURNEY", 60, 80);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 32px 'Noto Sans KR', sans-serif";
+    ctx.fillText("DAEDONG ONBOARDING VISION MAP", 60, 125);
+
+    ctx.fillStyle = "rgba(255,255,255,0.06)";
+    ctx.fillRect(60, 155, 680, 100);
+    ctx.strokeStyle = "rgba(255,255,255,0.15)";
+    ctx.strokeRect(60, 155, 680, 100);
+
+    const nameText = `${participant.name || "신규입사자"} 님`;
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 28px 'Noto Sans KR', sans-serif";
+    ctx.fillText(nameText, 84, 198);
+
+    const orgText = `${participant.organization || "대동"} · 사번: ${participant.employeeNumber || "미입력"}`;
+    ctx.fillStyle = "rgba(255,255,255,0.7)";
+    ctx.font = "18px 'Noto Sans KR', sans-serif";
+    ctx.fillText(orgText, 84, 232);
+
+    ctx.fillStyle = "#ef4023";
+    ctx.beginPath();
+    if (typeof ctx.roundRect === "function") {
+      ctx.roundRect(60, 280, 680, 120, 12);
+    } else {
+      ctx.rect(60, 280, 680, 120);
+    }
+    ctx.fill();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 20px 'Noto Sans KR', sans-serif";
+    ctx.fillText("당신의 핵심가치 유형", 88, 322);
+
+    ctx.font = "bold 44px 'Noto Sans KR', sans-serif";
+    ctx.fillText(`${result.valueType}형 대동인`, 88, 374);
+
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.font = "20px 'Noto Sans KR', sans-serif";
+    const desc = valueDescription[result.valueType as keyof typeof valueDescription] || "";
+    ctx.fillText(`“${desc}”`, 60, 440);
+
+    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillRect(60, 470, 680, 150);
+    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.strokeRect(60, 470, 680, 150);
+
+    ctx.fillStyle = "#ef4023";
+    ctx.font = "bold 15px 'Noto Sans KR', sans-serif";
+    ctx.fillText("SELECTED CORE VALUES & STRENGTHS", 84, 505);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 21px 'Noto Sans KR', sans-serif";
+    ctx.fillText(`핵심가치 :  ${selectedValues.join(" · ") || "선택 안 함"}`, 84, 545);
+    ctx.fillText(`나의강점 :  ${selectedStrengths.join(" · ") || "선택 안 함"}`, 84, 588);
+
+    if (visionText) {
+      ctx.fillStyle = "rgba(239, 64, 35, 0.1)";
+      ctx.fillRect(60, 645, 680, 140);
+      ctx.strokeStyle = "#ef4023";
+      ctx.strokeRect(60, 645, 680, 140);
+
+      ctx.fillStyle = "#ef4023";
+      ctx.font = "bold 15px 'Noto Sans KR', sans-serif";
+      ctx.fillText("MY VISION GOAL", 84, 680);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "italic 19px 'Noto Sans KR', sans-serif";
+      const displayVision = visionText.length > 55 ? visionText.slice(0, 52) + "..." : visionText;
+      ctx.fillText(`“${displayVision}”`, 84, 735);
+    }
+
+    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.font = "16px 'Noto Sans KR', sans-serif";
+    ctx.fillText(`지식 점수: ${result.score} / ${result.total}점`, 60, 835);
+
+    ctx.fillStyle = "#ef4023";
+    ctx.font = "bold 20px 'Noto Sans KR', sans-serif";
+    ctx.fillText("DAEDONG · AI TO THE FIELD", 60, 895);
+
+    const link = document.createElement("a");
+    link.download = `daedong-vision-map-${participant.name || "result"}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    showToast("Vision Map 카드가 PNG 이미지로 저장되었습니다!");
+  };
+
+  const copySummaryText = () => {
+    if (!result) return;
+    const text = `[대동 Great Journey - My Vision Map]
+👤 ${participant.name || "신규입사자"} (${participant.organization || "대동"} / 사번: ${participant.employeeNumber || "-"})
+🌟 핵심가치 유형: ${result.valueType}형 대동인
+💡 선택 가치: ${selectedValues.join(", ") || "선택 안 함"}
+💪 선택 강점: ${selectedStrengths.join(", ") || "선택 안 함"}
+🎯 Vision Goal: "${visionText || "대동에서 새로운 가능성을 넓혀가겠습니다."}"
+📊 지식 점수: ${result.score}/${result.total}점
+
+대동 신규입사자 온보딩 포털에서 나만의 Vision Map을 완성하세요!`;
+    navigator.clipboard.writeText(text).then(() => {
+      showToast("결과 요약이 클립보드에 복사되었습니다!");
+    }).catch(() => {
+      showToast("클립보드 복사에 실패했습니다.");
+    });
+  };
 
   const currentQuestion = quizStep >= 0 ? quizQuestions[quizStep] : null;
   const journey = schedules[activeDay];
@@ -108,10 +258,9 @@ export default function Home() {
     setSubmitState("saving");
     const answerRows = quizQuestions.map((question) => ({ questionId: question.id, selectedIndex: answers[question.id], correct: question.type === "personality" ? null : answers[question.id] === question.correctIndex }));
     try {
-      const response = await fetch("/api/submissions", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...participant, ...summary, values: selectedValues, strengths: selectedStrengths, visionText, answers: answerRows }) });
-      if (!response.ok) throw new Error();
+      await submitQuizToSupabase({ ...participant, ...summary, values: selectedValues, strengths: selectedStrengths, visionText, answers: answerRows });
       setSubmitState("saved");
-      const nextStats = await fetch("/api/stats").then((item) => item.json());
+      const nextStats = await fetchStatsFromSupabase();
       setStats(nextStats);
     } catch {
       setSubmitState("error");
@@ -237,8 +386,23 @@ export default function Home() {
         <header><img src="/images/daedong-logo.png" alt="DAEDONG" /><div className="quiz-progress"><span style={{ width: `${result ? 100 : progress}%` }} /></div><button onClick={() => setQuizOpen(false)} aria-label="챌린지 닫기">×</button></header>
         {!result && quizStep === -1 && <div className="participant-card"><p className="eyebrow">BEFORE WE START</p><h2>당신의 여정을 기록할게요.</h2><p>참여 이력은 교육 운영과 프로그램 개선을 위해 사용됩니다.</p><label>이름<input value={participant.name} onChange={(event) => setParticipant({ ...participant, name: event.target.value })} autoComplete="name" /></label><label>소속회사<select value={participant.organization} onChange={(event) => setParticipant({ ...participant, organization: event.target.value })}>{["대동", "대동Agtech", "대동기어", "대동모빌리티", "대동AILab", "기타"].map((item) => <option key={item}>{item}</option>)}</select></label><label>사번<input value={participant.employeeNumber} onChange={(event) => setParticipant({ ...participant, employeeNumber: event.target.value })} autoComplete="off" /></label><label className="consent"><input type="checkbox" checked={participant.consent} onChange={(event) => setParticipant({ ...participant, consent: event.target.checked })} /><span>개인정보 수집·이용 안내를 확인했으며 이에 동의합니다.</span></label><button className="quiz-next" disabled={!participant.name.trim() || !participant.employeeNumber.trim() || !participant.consent} onClick={() => setQuizStep(0)}>질문 시작하기 <span>→</span></button></div>}
         {!result && currentQuestion && <div className="question-card"><div className="question-number">QUESTION {String(quizStep + 1).padStart(2, "0")} <span>{currentQuestion.category}</span></div>{currentQuestion.image && <img className="question-image" src={currentQuestion.image} alt="퀴즈 참고 이미지" />}<h2>{currentQuestion.question}</h2><div className="answer-list">{currentQuestion.options.map((option, index) => <button className={answers[currentQuestion.id] === index ? "selected" : ""} onClick={() => setAnswers({ ...answers, [currentQuestion.id]: index })} key={option}><span>{String.fromCharCode(65 + index)}</span>{option}</button>)}</div><div className="quiz-navigation"><button disabled={quizStep === 0} onClick={() => setQuizStep((step) => step - 1)}>이전</button><button className="quiz-next" disabled={answers[currentQuestion.id] === undefined} onClick={nextQuestion}>{quizStep === quizQuestions.length - 1 ? "결과 보기" : "다음 질문"} <span>→</span></button></div></div>}
-        {result && <div className="result-card"><p className="eyebrow">YOUR DAEDONG VALUE</p><span className="result-kicker">당신은</span><h2>{result.valueType}형 대동인</h2><p className="result-description">{valueDescription[result.valueType as keyof typeof valueDescription]}</p><div className="score-ring"><strong>{result.score}</strong><span>/ {result.total}</span><small>KNOWLEDGE SCORE</small></div>{visionText && <blockquote>“{visionText}”</blockquote>}<div className={`save-state ${submitState}`}>{submitState === "saving" ? "참여 이력을 저장하고 있습니다." : submitState === "saved" ? "참여 이력이 안전하게 저장되었습니다." : submitState === "error" ? "저장에 실패했습니다. 잠시 후 다시 시도해주세요." : ""}</div><div className="result-actions"><button onClick={() => { setQuizOpen(false); document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" }); }}>5일 여정 다시 보기</button><button className="quiz-next" onClick={openQuiz}>다시 도전하기 ↻</button></div></div>}
+        {result && <div className="result-card">
+          <p className="eyebrow">YOUR DAEDONG VALUE</p>
+          <span className="result-kicker">당신은</span>
+          <h2>{result.valueType}형 대동인</h2>
+          <p className="result-description">{valueDescription[result.valueType as keyof typeof valueDescription]}</p>
+          <div className="score-ring"><strong>{result.score}</strong><span>/ {result.total}</span><small>KNOWLEDGE SCORE</small></div>
+          {visionText && <blockquote>“{visionText}”</blockquote>}
+          <div className={`save-state ${submitState}`}>{submitState === "saving" ? "참여 이력을 저장하고 있습니다." : submitState === "saved" ? "참여 이력이 안전하게 저장되었습니다." : submitState === "error" ? "저장에 실패했습니다. 잠시 후 다시 시도해주세요." : ""}</div>
+          <div className="result-actions">
+            <button className="card-download-btn" onClick={downloadCardPNG}>🖼️ Vision Map 카드 저장 (PNG)</button>
+            <button className="card-copy-btn" onClick={copySummaryText}>📋 결과 요약 복사</button>
+            <button onClick={() => { setQuizOpen(false); document.getElementById("journey")?.scrollIntoView({ behavior: "smooth" }); }}>5일 여정 다시 보기</button>
+            <button className="quiz-next" onClick={openQuiz}>다시 도전하기 ↻</button>
+          </div>
+        </div>}
       </div>}
+      {toastMsg && <div className="toast-notification" role="status" aria-live="polite">{toastMsg}</div>}
     </main>
   );
 }

@@ -8,10 +8,11 @@
 - DAY 1~5 교육 일정 탐색
 - 대동 미래 5대 사업과 핵심가치 소개
 - Vision Map 작성과 7문항 퀴즈
-- 참여 이력과 재응시 기록 저장
+- Vision Map 카드 PNG 다운로드 & 결과 요약 복사
+- 데이터베이스(Supabase) 기반 이력 및 퀴즈 관리
 - 10명 이상 참여 시 익명 집계 공개
-- 관리자 참여 내역·통계·Vision Map 확인
-- 퀴즈 문항 편집, 개별 삭제, 엑셀용 CSV 다운로드
+- 관리자 참여 내역·통계·Vision Map 확인 및 퀴즈 편집
+- GitHub Pages 자동 배포 지원
 
 ## 로컬 실행
 
@@ -22,40 +23,33 @@ npm run dev
 
 브라우저에서 `http://localhost:3000`을 열어 확인합니다. 관리자 화면은 `/admin`입니다.
 
-## 관리자 인증 설정
+## Supabase 연동 설정
 
-실제 인증값은 Git에 포함되지 않는 `.env.local` 파일에만 둡니다. `.env.example`을 참고해 다음 값을 설정합니다.
+1. [Supabase](https://supabase.com)에 로그인 후 새 프로젝트를 생성합니다.
+2. `SQL Editor` 메뉴로 이동하여 저장소의 `supabase/schema.sql` 파일 내용을 붙여넣고 실행합니다.
+   - `submissions` 테이블 및 `questions` 테이블이 생성되고 초기 퀴즈 데이터가 등록됩니다.
+3. 프로젝트의 `Project Settings → API`에서 아래 정보들을 확인합니다:
+   - `Project URL`
+   - `anon / public key`
+4. 로컬 개발 시 `.env.local` 파일에 환경변수를 추가합니다:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
 
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD_HASH`
-- `SESSION_SECRET`
+## GitHub Pages 자동 배포
 
-새 비밀번호의 해시는 다음 방식으로 생성합니다.
+`main` 브랜치에 push하면 GitHub Actions가 빌드 후 GitHub Pages로 자동 배포합니다.
 
-```bash
-NEW_ADMIN_PASSWORD="새 비밀번호" npm run admin:hash
-```
-
-출력된 값을 `ADMIN_PASSWORD_HASH`에 등록합니다. 배포 환경에서는 호스팅 서비스의 보안 환경변수 기능을 사용해야 합니다.
-
-## GitHub push 자동 배포
-
-`main` 브랜치에 push하면 GitHub Actions가 빌드와 테스트를 실행한 뒤 Cloudflare Workers로 배포합니다. 저장소의 `Settings → Secrets and variables → Actions`에 아래 Repository secrets를 등록해야 합니다.
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_D1_DATABASE_ID`
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD_HASH`
-- `SESSION_SECRET`
-
-선택적으로 Repository variable `CLOUDFLARE_D1_DATABASE_NAME`을 등록할 수 있으며, 생략하면 `daedong-great-journey-db`를 사용합니다. Cloudflare 정보가 없는 동안 자동 배포 작업은 실행되지 않습니다.
+1. 저장소의 `Settings → Pages` 메뉴에서 **Source**를 **GitHub Actions**로 설정합니다.
+2. `Settings → Secrets and variables → Actions`에 아래 Repository secrets를 추가합니다:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. 코드 변경사항을 `main` 브랜치에 push하면 빌드와 배포가 자동으로 실행됩니다.
 
 ## 데이터와 개인정보
 
 이름, 소속회사, 사번, 퀴즈 결과와 Vision Map은 교육 참여 이력 관리를 위해 저장됩니다. 공개 통계에는 10명 이상 집계된 결과만 표시하며 원본 참여 정보는 관리자에게만 제공됩니다.
-
-로컬 데이터는 `.wrangler/` 아래에 저장되고 Git에서 제외됩니다. 실제 운영 전 개인정보 처리방침과 내부 보안 검토가 필요합니다.
 
 ## 브랜드 자료
 

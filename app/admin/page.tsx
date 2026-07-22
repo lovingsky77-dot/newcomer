@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { deleteSubmissionFromSupabase, fetchAdminSubmissionsFromSupabase, isSupabaseConfigured, saveQuestionToSupabase } from "../../lib/supabase";
+import type { QuizQuestion } from "../../lib/content";
 
 type Submission = {
   id: string; name: string; organization: string; employeeNumber: string; cohort: string;
   score: number; total: number; valueType: string; values: string[]; strengths: string[];
   visionText: string; answers: Array<{ questionId: string; selectedIndex: number; correct: boolean | null }>; completedAt: string;
 };
-type Question = { id: string; type: string; category: string; question: string; options: string[]; correctIndex: number | null; explanation: string; active: boolean; sortOrder: number };
+type Question = QuizQuestion;
 
 export default function AdminPage() {
   const [status, setStatus] = useState<"checking" | "login" | "ready" | "config">("checking");
@@ -21,19 +23,33 @@ export default function AdminPage() {
   const [organization, setOrganization] = useState("전체");
 
   async function loadData() {
-    const response = await fetch("/api/admin/data");
-    if (response.ok) {
-      const data = await response.json();
+    try {
+      const data = await fetchAdminSubmissionsFromSupabase();
       setSubmissions(data.submissions);
       setQuestions(data.questions);
       setStatus("ready");
       return;
+    } catch {
+      if (isSupabaseConfigured) {
+        setStatus("ready");
+        return;
+      }
     }
     const config = await fetch("/api/admin/login").then((item) => item.json()).catch(() => ({ configured: false }));
     setStatus(config.configured ? "login" : "config");
   }
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    loadData();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelected(null);
+        setEditing(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const filtered = useMemo(() => submissions.filter((item) => {
     const matchesOrg = organization === "전체" || item.organization === organization;
@@ -56,19 +72,19 @@ export default function AdminPage() {
     setCredentials({ email: "", password: "" }); await loadData();
   }
 
-  async function logout() { await fetch("/api/admin/logout", { method: "POST" }); setSubmissions([]); setStatus("login"); }
+  async function logout() { await fetch("/api/admin/logout").catch(() => undefined); setSubmissions([]); setStatus("login"); }
 
   async function removeSubmission(id: string) {
     if (!confirm("이 참여 기록을 삭제할까요? 삭제 후에는 복구할 수 없습니다.")) return;
-    const response = await fetch("/api/admin/data", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
-    if (response.ok) { setSelected(null); await loadData(); }
+    const ok = await deleteSubmissionFromSupabase(id);
+    if (ok) { setSelected(null); await loadData(); }
   }
 
   async function saveQuestion(event: React.FormEvent) {
     event.preventDefault();
     if (!editing) return;
-    const response = await fetch("/api/admin/data", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(editing) });
-    if (response.ok) { setEditing(null); await loadData(); }
+    const ok = await saveQuestionToSupabase(editing);
+    if (ok) { setEditing(null); await loadData(); }
     else setError("문항을 저장하지 못했습니다.");
   }
 
