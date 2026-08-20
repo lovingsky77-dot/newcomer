@@ -36,10 +36,9 @@ export default function GuidePage() {
           <img src="/images/daedong-logo.png" alt="DAEDONG" />
         </Link>
         <nav aria-label="안내 페이지 메뉴">
-          <Link href="/#journey">5일의 여정</Link>
-          <Link className="active" href="/guide" aria-current="page">준비 안내</Link>
+          <Link href="/#journey">5일의 여정</Link><Link href="/#future">미래사업</Link><Link href="/#vision">Vision Map</Link>
         </nav>
-        <Link className="guide-home-link" href="/">홈으로 <span>↗</span></Link>
+        <div className="guide-header-actions"><span className="guide-current" aria-current="page"><small>CHECK</small> 참여 전 준비</span><Link className="guide-home-link" href="/">홈 <span>↗</span></Link></div>
       </header>
 
       <section className="guide-hero">

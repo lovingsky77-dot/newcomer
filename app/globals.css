@@ -190,17 +190,22 @@ html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-
 .challenge-content{max-width:900px}
 
 /* Education preparation guide */
-.mobile-prep-link{display:none}
-.prep-nav-link{position:relative}
-.prep-nav-link::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:2px;background:var(--red)}
+.header-actions{display:flex;align-items:center;gap:10px}
+.prep-utility-link{height:48px;padding:0 15px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.48);background:rgba(0,0,0,.12);font-size:12px;font-weight:650;transition:background-color .2s ease,border-color .2s ease}
+.prep-utility-link small{font-size:8px;letter-spacing:.14em;color:rgba(255,255,255,.6)}
+.prep-utility-link span{font-size:16px;transition:transform .2s ease}
+.prep-utility-link:hover{background:#fff;border-color:#fff;color:#111}
+.prep-utility-link:hover small{color:var(--red)}
+.prep-utility-link:hover span{transform:translate(2px,-2px)}
 .guide-page{background:var(--paper)}
 .guide-header{height:88px;padding:0 max(4.2vw,24px);display:flex;align-items:center;justify-content:space-between;position:absolute;z-index:20;width:100%;color:#fff;border-bottom:1px solid rgba(255,255,255,.28)}
 .guide-header .brand img{width:160px}
 .guide-header nav{display:flex;gap:38px;font-size:14px;font-weight:650}
-.guide-header nav a{opacity:.7}
-.guide-header nav a.active{opacity:1;position:relative}
-.guide-header nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;background:var(--red)}
-.guide-home-link{min-width:118px;padding:13px 15px;background:var(--red);display:flex;justify-content:space-between;font-size:12px;font-weight:750}
+.guide-header nav a{opacity:.82;transition:opacity .2s ease}.guide-header nav a:hover{opacity:1}
+.guide-header-actions{display:flex;align-items:center;gap:10px}
+.guide-current{height:48px;padding:0 15px;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.48);background:rgba(255,255,255,.08);font-size:12px;font-weight:650}
+.guide-current small{font-size:8px;letter-spacing:.14em;color:rgba(255,255,255,.6)}
+.guide-home-link{height:48px;min-width:82px;padding:0 14px;background:var(--red);display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:750}
 .guide-hero{min-height:680px;padding:180px max(5.5vw,28px) 72px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr minmax(420px,.72fr);gap:7vw;align-items:end;background:linear-gradient(110deg,rgba(4,7,5,.96),rgba(7,14,9,.74)),url('/images/ai-field-hero.png') center/cover;color:#fff}
 .guide-hero::after{content:"";position:absolute;right:-12vw;top:-18vw;width:48vw;height:48vw;border:1px solid rgba(255,255,255,.14);border-radius:50%;box-shadow:0 0 0 7vw rgba(239,63,35,.06),0 0 0 14vw rgba(255,255,255,.03)}
 .guide-hero-grid{position:absolute;inset:88px 0 0;background-image:linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:12.5vw 100%;mask-image:linear-gradient(90deg,#000,transparent 80%)}
@@ -282,7 +287,23 @@ html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-
 .guide-footer p{margin-right:auto}
 .guide-footer a{font-size:12px}
 
+.prep-bridge{margin-top:58px;display:grid;grid-template-columns:minmax(280px,.75fr) minmax(460px,1.25fr) 210px;min-height:280px;background:#111310;color:#fff;border-radius:2px;overflow:hidden}
+.prep-bridge-copy{padding:38px 40px;background:linear-gradient(145deg,#1b1e1a,#0e100e)}
+.prep-bridge-copy .eyebrow{margin-bottom:36px;color:var(--red)}
+.prep-bridge-copy h3{margin:0;font-size:36px;line-height:1.13;letter-spacing:-.045em}
+.prep-bridge-items{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid #363934}
+.prep-bridge-items>div{padding:38px 22px;display:flex;flex-direction:column;border-right:1px solid #363934}
+.prep-bridge-items span{font-size:10px;color:var(--red);font-weight:800;letter-spacing:.12em}
+.prep-bridge-items strong{margin-top:auto;font-size:22px}
+.prep-bridge-items p{margin:9px 0 0;color:#9fa19b;font-size:12px;line-height:1.6}
+.prep-bridge-link{padding:36px 28px;display:flex;flex-direction:column;justify-content:space-between;background:var(--red);color:#fff;font-size:14px;font-weight:750}
+.prep-bridge-link b{align-self:flex-end;font-size:34px;font-weight:400;transition:transform .2s ease}
+.prep-bridge-link:hover b{transform:translateX(5px)}
+
 @media(max-width:900px){
+  .site-header nav,.guide-header nav{gap:20px;font-size:12px}
+  .prep-utility-link small,.guide-current small{display:none}
+  .prep-bridge{grid-template-columns:1fr 1.5fr}.prep-bridge-link{grid-column:1/-1;min-height:84px;flex-direction:row;align-items:center}.prep-bridge-link b{align-self:auto}
   .guide-hero{grid-template-columns:1fr;gap:58px;align-items:end}
   .guide-date-card{display:grid;grid-template-columns:repeat(3,1fr)}
   .guide-date-card>div{display:block;border-right:1px solid rgba(255,255,255,.25);padding:18px}
@@ -291,8 +312,9 @@ html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-
 }
 
 @media(max-width:720px){
-  .mobile-prep-link{display:block;margin-left:auto;margin-right:9px;padding:10px 9px;border:1px solid rgba(255,255,255,.45);font-size:10px;font-weight:700}
-  .guide-header{height:70px;padding:0 18px}.guide-header .brand img{width:126px}.guide-header nav{display:none}.guide-home-link{min-width:0;padding:10px;font-size:10px}.guide-home-link span{display:none}
+  .header-actions{gap:6px}.prep-utility-link{height:40px;padding:0 10px;font-size:10px}.prep-utility-link strong{font-weight:650}.prep-utility-link span{display:none}
+  .site-header .header-cta{height:40px;padding:0 10px;white-space:nowrap}
+  .guide-header{height:70px;padding:0 18px}.guide-header .brand img{width:116px}.guide-header nav{display:none}.guide-header-actions{gap:6px}.guide-current{height:40px;padding:0 10px;font-size:10px}.guide-home-link{height:40px;min-width:42px;padding:0 10px;font-size:10px}.guide-home-link span{display:none}
   .guide-hero{min-height:660px;padding:150px 20px 48px;background-position:64% center}
   .guide-hero-grid{inset:70px 0 0;background-size:25vw 100%}
   .guide-hero-copy h1{font-size:clamp(43px,13vw,57px);line-height:1.08}
@@ -301,6 +323,7 @@ html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-
   .guide-tabs{height:58px;padding:0 20px;gap:24px;overflow-x:auto;white-space:nowrap;font-size:11px}
   .guide-section{padding:80px 20px;scroll-margin-top:58px}.guide-section-title{grid-template-columns:42px 1fr;margin-bottom:42px}.guide-section-title h2{font-size:42px}
   .guide-card-grid{grid-template-columns:1fr}.guide-card.feature{grid-column:auto}.guide-card{min-height:270px;border-right:0;padding:24px}.guide-card h3{font-size:30px}.guide-card ul{grid-template-columns:1fr 1fr}
+  .prep-bridge{margin-top:38px;grid-template-columns:1fr}.prep-bridge-copy{padding:30px 24px}.prep-bridge-copy .eyebrow{margin-bottom:24px}.prep-bridge-copy h3{font-size:32px}.prep-bridge-items{grid-template-columns:1fr;border-left:0;border-top:1px solid #363934}.prep-bridge-items>div{min-height:112px;padding:20px 24px;display:grid;grid-template-columns:34px 74px 1fr;align-items:center;border-right:0;border-bottom:1px solid #363934}.prep-bridge-items strong{margin:0;font-size:18px}.prep-bridge-items p{margin:0}.prep-bridge-link{grid-column:auto;padding:24px;min-height:76px}
   .travel-board>article{grid-template-columns:1fr}.travel-label{border-right:0;border-bottom:1px solid #3a3c38;flex-direction:row;align-items:end;padding:20px}.travel-label span{font-size:38px}.travel-content{padding:28px 20px}.travel-content>h3{font-size:26px}
   .train-grid,.departure-grid{grid-template-columns:1fr}.train-grid>div,.departure-grid>div{border-left:0;border-top:1px solid #3a3c38;padding:16px 0}.train-grid>div:first-child,.departure-grid>div:first-child{border-top:0}
   .stay-lead h3{font-size:38px}.stay-checklist article{grid-template-columns:1fr;gap:8px}.stay-checklist h3{font-size:22px}
@@ -310,4 +333,4 @@ html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-
   .guide-footer{display:grid;grid-template-columns:1fr auto;padding:30px 20px;gap:16px}.guide-footer p{grid-column:1/-1;grid-row:2}.guide-footer a{grid-column:2;grid-row:1}
 }
 
-@media(max-width:380px){.mobile-prep-link{display:none}.guide-header .brand img{width:112px}}
+@media(max-width:380px){.site-header .brand img,.guide-header .brand img{width:100px}.prep-utility-link{padding:0 8px}.site-header .header-cta{padding:0 8px}.guide-current{padding:0 8px}.guide-home-link{padding:0 8px}}

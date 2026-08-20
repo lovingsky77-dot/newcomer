@@ -279,10 +279,12 @@ export default function Home() {
       <header className="site-header">
         <a className="brand" href="#top" onClick={(event) => scrollToSection(event, "top")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
         <nav aria-label="주요 메뉴">
-          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a><a className="prep-nav-link" href="/guide">준비 안내</a>
+          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a>
         </nav>
-        <a className="mobile-prep-link" href="/guide">준비 안내</a>
-        <button className="header-cta" onClick={openQuiz}>대동인 챌린지 <span>↗</span></button>
+        <div className="header-actions">
+          <a className="prep-utility-link" href="/guide"><small>CHECK</small><strong>참여 전 준비</strong><span>↗</span></a>
+          <button className="header-cta" onClick={openQuiz}>대동인 챌린지 <span>↗</span></button>
+        </div>
       </header>
 
       <section className="hero" id="top">
@@ -339,6 +341,15 @@ export default function Home() {
           </div>
         </div>
         <div className="route-line"><span>서울사무소</span><i /><span>동부권역센터</span><i /><span>창녕비전캠퍼스</span><i /><span>성서통합R&D센터</span><i /><span>모빌리티 신공장</span><i /><span>대동금속</span><i /><span>대구공장</span><i /><span>그룹시험센터</span></div>
+        <aside className="prep-bridge" aria-labelledby="prep-bridge-title">
+          <div className="prep-bridge-copy"><p className="eyebrow light">BEFORE THE JOURNEY</p><h3 id="prep-bridge-title">출발 전,<br />이것만 확인하세요.</h3></div>
+          <div className="prep-bridge-items">
+            <div><span>01</span><strong>복장</strong><p>편안하고 깔끔한 사복</p></div>
+            <div><span>02</span><strong>준비물</strong><p>세면도구 · 수건 · 상비약</p></div>
+            <div><span>03</span><strong>이동</strong><p>9.7 월요일 12:30 시작</p></div>
+          </div>
+          <a className="prep-bridge-link" href="/guide"><span>전체 준비 안내 확인</span><b>→</b></a>
+        </aside>
       </section>
 
       <section className="future" id="future">

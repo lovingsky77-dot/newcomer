@@ -22,6 +22,9 @@ test("renders the education preparation guide and links it from the homepage", a
     readFile(new URL("app/guide/page.tsx", root), "utf8"),
   ]);
   assert.match(home, /href="\/guide"/);
+  assert.match(home, /BEFORE THE JOURNEY/);
+  assert.match(home, /전체 준비 안내 확인/);
+  assert.doesNotMatch(home, /prep-nav-link/);
   assert.match(guide, /참여 전 준비/);
   assert.match(guide, /이동 안내/);
   assert.match(guide, /숙박 안내/);
