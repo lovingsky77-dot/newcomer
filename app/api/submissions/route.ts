@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     await getD1().prepare(`INSERT INTO submissions
       (id, name, organization, employee_number, cohort, score, total, value_type, values_json, strengths_json, vision_text, answers_json, completed_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind(id, name, organization, employeeNumber, "2026 상반기", score, total, valueType, JSON.stringify(values), JSON.stringify(strengths), visionText, JSON.stringify(answers), completedAt).run();
+      .bind(id, name, organization, employeeNumber, "2026 하반기", score, total, valueType, JSON.stringify(values), JSON.stringify(strengths), visionText, JSON.stringify(answers), completedAt).run();
     return Response.json({ id, completedAt }, { status: 201 });
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "결과를 저장하지 못했습니다." }, { status: 500 });

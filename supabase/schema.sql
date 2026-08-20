@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public.submissions (
   name TEXT NOT NULL,
   organization TEXT NOT NULL DEFAULT '대동',
   employee_number TEXT NOT NULL,
-  cohort TEXT NOT NULL DEFAULT '2026 상반기',
+  cohort TEXT NOT NULL DEFAULT '2026 하반기',
   score INT NOT NULL DEFAULT 0,
   total INT NOT NULL DEFAULT 6,
   value_type TEXT NOT NULL,

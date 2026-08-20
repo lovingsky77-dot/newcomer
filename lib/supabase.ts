@@ -46,7 +46,7 @@ export async function submitQuizToSupabase(payload: {
       name: payload.name,
       organization: payload.organization,
       employee_number: payload.employeeNumber,
-      cohort: "2026 상반기",
+      cohort: "2026 하반기",
       score: payload.score,
       total: payload.total,
       value_type: payload.valueType,
