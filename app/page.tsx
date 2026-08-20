@@ -279,8 +279,9 @@ export default function Home() {
       <header className="site-header">
         <a className="brand" href="#top" onClick={(event) => scrollToSection(event, "top")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
         <nav aria-label="주요 메뉴">
-          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a>
+          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a><a className="prep-nav-link" href="/guide">준비 안내</a>
         </nav>
+        <a className="mobile-prep-link" href="/guide">준비 안내</a>
         <button className="header-cta" onClick={openQuiz}>대동인 챌린지 <span>↗</span></button>
       </header>
 
@@ -365,7 +366,7 @@ export default function Home() {
         <div className="challenge-content"><p className="eyebrow light">DAEDONG-IN CHALLENGE</p><h2>나는 얼마나<br />대동인이 되었을까?</h2><p>7개의 질문으로 대동을 다시 만나고,<br />나의 핵심가치 유형을 발견해보세요.</p><button className="challenge-button" onClick={openQuiz}>챌린지 시작하기 <span>↗</span></button></div>
       </section>
 
-      <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. Onboarding Journey Prototype.</small></footer>
+      <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="/guide">교육 준비 안내</a><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. Onboarding Journey Prototype.</small></footer>
 
       {videoOpen && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="대동 미래농업 영상"><div className="video-modal"><button className="modal-close" onClick={() => setVideoOpen(false)} aria-label="영상 닫기">×</button><iframe src="https://www.youtube.com/embed/vjzp4rxfxDU?autoplay=1&rel=0" title="대동이 여는 미래농업 AI TO THE FIELD" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen /></div></div>}
 
