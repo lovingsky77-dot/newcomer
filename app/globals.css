@@ -185,3 +185,6 @@ html.custom-cursor-enabled body,html.custom-cursor-enabled a,html.custom-cursor-
 .card-copy-btn{background:#222!important;color:#fff!important;border:1px solid #444!important;font-weight:700!important;transition:background-color .2s ease}
 .card-copy-btn:hover{background:#333!important}
 
+/* Public participation statistics are intentionally hidden from the landing page. */
+.challenge{grid-template-columns:1fr;min-height:620px}
+.challenge-content{max-width:900px}

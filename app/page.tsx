@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../lib/content";
-import { fetchQuizFromSupabase, fetchStatsFromSupabase, submitQuizToSupabase } from "../lib/supabase";
+import { fetchQuizFromSupabase, submitQuizToSupabase } from "../lib/supabase";
 
 const values = [
   { name: "창조", en: "CREATIVITY", copy: "익숙한 방식 너머의 가능성을 발견합니다." },
@@ -28,8 +28,6 @@ const valueDescription = {
   책임: "맡은 결과를 단단하게 완성하는 현장 리더",
 };
 
-type PublicStats = { published: boolean; count: number; remaining?: number; values?: Array<{ valueType: string; count: number }> };
-
 export default function Home() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [activeDay, setActiveDay] = useState("DAY 1");
@@ -45,13 +43,10 @@ export default function Home() {
   const [participant, setParticipant] = useState({ name: "", organization: "대동", employeeNumber: "", consent: false });
   const [result, setResult] = useState<{ score: number; total: number; valueType: string } | null>(null);
   const [submitState, setSubmitState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [stats, setStats] = useState<PublicStats>({ published: false, count: 0, remaining: 10 });
-
   const [toastMsg, setToastMsg] = useState("");
 
   useEffect(() => {
     fetchQuizFromSupabase().then((questions) => questions?.length && setQuizQuestions(questions)).catch(() => undefined);
-    fetchStatsFromSupabase().then((nextStats) => nextStats && setStats(nextStats)).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -260,8 +255,6 @@ export default function Home() {
     try {
       await submitQuizToSupabase({ ...participant, ...summary, values: selectedValues, strengths: selectedStrengths, visionText, answers: answerRows });
       setSubmitState("saved");
-      const nextStats = await fetchStatsFromSupabase();
-      setStats(nextStats);
     } catch {
       setSubmitState("error");
     }
@@ -370,17 +363,13 @@ export default function Home() {
 
       <section className="challenge section-pad" id="challenge">
         <div className="challenge-content"><p className="eyebrow light">DAEDONG-IN CHALLENGE</p><h2>나는 얼마나<br />대동인이 되었을까?</h2><p>7개의 질문으로 대동을 다시 만나고,<br />나의 핵심가치 유형을 발견해보세요.</p><button className="challenge-button" onClick={openQuiz}>챌린지 시작하기 <span>↗</span></button></div>
-        <div className="challenge-stats">
-          <div><strong>{stats.count}</strong><span>누적 도전자</span></div>
-          {stats.published ? <><div><strong>{stats.values?.[0]?.valueType || "-"}</strong><span>가장 많은 결과 유형</span></div><p>10명 이상의 익명 집계 결과입니다.</p></> : <><div><strong>{stats.remaining}</strong><span>통계 공개까지 남은 참여</span></div><p>10명 이상 참여하면 익명 결과가 공개됩니다.</p></>}
-        </div>
       </section>
 
       <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. Onboarding Journey Prototype.</small></footer>
 
       {videoOpen && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="대동 미래농업 영상"><div className="video-modal"><button className="modal-close" onClick={() => setVideoOpen(false)} aria-label="영상 닫기">×</button><iframe src="https://www.youtube.com/embed/vjzp4rxfxDU?autoplay=1&rel=0" title="대동이 여는 미래농업 AI TO THE FIELD" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen /></div></div>}
 
-      {privacyOpen && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="개인정보 수집 이용 안내"><div className="privacy-modal"><button className="modal-close dark" onClick={() => setPrivacyOpen(false)} aria-label="닫기">×</button><p className="eyebrow">PRIVACY</p><h2>개인정보 수집·이용 안내</h2><dl><dt>수집 항목</dt><dd>이름, 소속회사, 사번, 퀴즈 답변·점수, Vision Map 내용, 참여 일시</dd><dt>이용 목적</dt><dd>교육 참여 이력 확인, 교육 효과 분석 및 프로그램 개선</dd><dt>보관 기준</dt><dd>정보주체의 삭제 요청 또는 관리자의 일괄 삭제 시까지</dd><dt>열람 범위</dt><dd>지정된 교육 관리자만 원본을 열람하며, 공개 화면에는 10명 이상 집계된 통계만 표시합니다.</dd></dl><p>동의를 거부할 수 있으며, 동의하지 않을 경우 퀴즈 결과 저장이 제한됩니다. 삭제 요청: <a href="mailto:mwkim@daedong.co.kr">인사혁신팀(교육)</a></p></div></div>}
+      {privacyOpen && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="개인정보 수집 이용 안내"><div className="privacy-modal"><button className="modal-close dark" onClick={() => setPrivacyOpen(false)} aria-label="닫기">×</button><p className="eyebrow">PRIVACY</p><h2>개인정보 수집·이용 안내</h2><dl><dt>수집 항목</dt><dd>이름, 소속회사, 사번, 퀴즈 답변·점수, Vision Map 내용, 참여 일시</dd><dt>이용 목적</dt><dd>교육 참여 이력 확인, 교육 효과 분석 및 프로그램 개선</dd><dt>보관 기준</dt><dd>정보주체의 삭제 요청 또는 관리자의 일괄 삭제 시까지</dd><dt>열람 범위</dt><dd>지정된 교육 관리자만 참여 원본을 열람합니다.</dd></dl><p>동의를 거부할 수 있으며, 동의하지 않을 경우 퀴즈 결과 저장이 제한됩니다. 삭제 요청: <a href="mailto:mwkim@daedong.co.kr">인사혁신팀(교육)</a></p></div></div>}
 
       {quizOpen && <div className="quiz-shell" role="dialog" aria-modal="true" aria-label="대동인 챌린지">
         <header><img src="/images/daedong-logo.png" alt="DAEDONG" /><div className="quiz-progress"><span style={{ width: `${result ? 100 : progress}%` }} /></div><button onClick={() => setQuizOpen(false)} aria-label="챌린지 닫기">×</button></header>
