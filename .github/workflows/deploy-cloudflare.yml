@@ -58,7 +58,7 @@ jobs:
 
       - name: Prepare Cloudflare configuration
         if: steps.deployment-config.outputs.ready == 'true'
-        run: node scripts/prepare-cloudflare-deploy.mjs
+        run: node tooling/scripts/prepare-cloudflare-deploy.mjs
         env:
           CLOUDFLARE_D1_DATABASE_ID: ${{ secrets.CLOUDFLARE_D1_DATABASE_ID }}
           CLOUDFLARE_D1_DATABASE_NAME: ${{ vars.CLOUDFLARE_D1_DATABASE_NAME }}

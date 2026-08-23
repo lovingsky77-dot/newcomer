@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const root = new URL("../", import.meta.url);
+const root = new URL("../../", import.meta.url);
 
 test("renders the Daedong Great Journey homepage", async () => {
   const [page, layout] = await Promise.all([
-    readFile(new URL("app/page.tsx", root), "utf8"),
-    readFile(new URL("app/layout.tsx", root), "utf8"),
+    readFile(new URL("src/app/page.tsx", root), "utf8"),
+    readFile(new URL("src/app/layout.tsx", root), "utf8"),
   ]);
   assert.match(page, /대동에서 시작하는/);
   assert.match(page, /AI TO THE FIELD/);
@@ -18,8 +18,8 @@ test("renders the Daedong Great Journey homepage", async () => {
 
 test("renders the education preparation guide and links it from the homepage", async () => {
   const [home, guide] = await Promise.all([
-    readFile(new URL("app/page.tsx", root), "utf8"),
-    readFile(new URL("app/guide/page.tsx", root), "utf8"),
+    readFile(new URL("src/app/page.tsx", root), "utf8"),
+    readFile(new URL("src/app/guide/page.tsx", root), "utf8"),
   ]);
   assert.match(home, /href="\/guide"/);
   assert.match(home, /BEFORE THE JOURNEY/);
@@ -36,7 +36,7 @@ test("keeps credentials and local data out of the public repository", async () =
   const [ignore, example, page] = await Promise.all([
     readFile(new URL(".gitignore", root), "utf8"),
     readFile(new URL(".env.example", root), "utf8"),
-    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("src/app/page.tsx", root), "utf8"),
   ]);
   assert.match(ignore, /\.env\*/);
   assert.match(ignore, /\/\.wrangler\//);

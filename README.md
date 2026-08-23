@@ -23,10 +23,21 @@ npm run dev
 
 브라우저에서 `http://localhost:3000`을 열어 확인합니다. 관리자 화면은 `/admin`입니다.
 
+## 폴더 구조
+
+- `src`: 웹앱, 공용 라이브러리, 데이터 접근 코드
+- `infrastructure`: Cloudflare Worker, Drizzle 마이그레이션, Supabase 스키마
+- `tooling`: 빌드 플러그인과 운영 스크립트
+- `quality`: 자동화 테스트
+- `samples`: 기능 예제
+- `projects`: 독립 실행형 보조 프로젝트
+- `artifacts`: 압축본, PDF 이미지, 로그 등 생성 산출물
+- `public`: 웹에서 제공되는 정적 이미지와 아이콘
+
 ## Supabase 연동 설정
 
 1. [Supabase](https://supabase.com)에 로그인 후 새 프로젝트를 생성합니다.
-2. `SQL Editor` 메뉴로 이동하여 저장소의 `supabase/schema.sql` 파일 내용을 붙여넣고 실행합니다.
+2. `SQL Editor` 메뉴로 이동하여 저장소의 `infrastructure/database/supabase/schema.sql` 파일 내용을 붙여넣고 실행합니다.
    - `submissions` 테이블 및 `questions` 테이블이 생성되고 초기 퀴즈 데이터가 등록됩니다.
 3. 프로젝트의 `Project Settings → API`에서 아래 정보들을 확인합니다:
    - `Project URL`

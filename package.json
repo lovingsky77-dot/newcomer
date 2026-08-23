@@ -9,10 +9,10 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "test": "npm run build && node --test quality/tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
-    "admin:hash": "node scripts/hash-admin-password.mjs"
+    "admin:hash": "node tooling/scripts/hash-admin-password.mjs"
   },
   "dependencies": {
     "@fontsource-variable/noto-sans-kr": "^5.2.8",
