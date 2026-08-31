@@ -60,11 +60,11 @@ export default function GuidePage() {
         <dl className="guide-date-card">
           <div>
             <dt>START</dt>
-            <dd>9.7 MON<br /><strong>12:30</strong></dd>
+            <dd>9.14 MON<br /><strong>11:00</strong></dd>
           </div>
           <div>
             <dt>FINISH</dt>
-            <dd>9.11 FRI<br /><strong>13:30</strong></dd>
+            <dd>9.18 FRI<br /><strong>13:30</strong></dd>
           </div>
           <div>
             <dt>STAY</dt>
@@ -123,34 +123,34 @@ export default function GuidePage() {
         <div className="travel-board">
           <article>
             <div className="travel-label">
-              <span>9.7</span>
+              <span>9.14</span>
               <strong>교육 시작</strong>
             </div>
             <div className="travel-content">
-              <h3>월요일 오후 12시 30분</h3>
-              <p>대중교통 이용자는 열차를 개인 예약한 뒤 이동합니다.</p>
+              <h3>월요일 오전 11시</h3>
+              <p>대중교통 이용자는 담당자 안내를 확인한 뒤 열차를 개인 예약합니다.</p>
               <div className="train-grid">
                 <div>
-                  <small>KTX 318</small>
-                  <strong>10:01 → 11:46</strong>
-                  <span>수서역 도착</span>
+                  <small>ARRIVAL</small>
+                  <strong>교육 시작 전 도착</strong>
+                  <span>집결 장소와 시간을 확인해 주세요.</span>
                 </div>
                 <div>
-                  <small>KTX 018</small>
-                  <strong>09:32 → 11:24</strong>
-                  <span>서울역 도착</span>
+                  <small>TRAIN</small>
+                  <strong>개별 열차 예약</strong>
+                  <span>변경된 일정에 맞는 열차를 이용해 주세요.</span>
                 </div>
                 <div>
-                  <small>KTX 020</small>
-                  <strong>09:38 → 11:28</strong>
-                  <span>서울역 도착</span>
+                  <small>NOTICE</small>
+                  <strong>담당자 안내 우선</strong>
+                  <span>세부 이동 안내는 별도 공지를 따릅니다.</span>
                 </div>
               </div>
             </div>
           </article>
           <article>
             <div className="travel-label">
-              <span>9.11</span>
+              <span>9.18</span>
               <strong>교육 종료</strong>
             </div>
             <div className="travel-content">

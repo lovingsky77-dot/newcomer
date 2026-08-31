@@ -330,7 +330,7 @@ export default function Home() {
       </section>
 
       <section className="journey section-pad" id="journey">
-        <div className="section-heading row-heading"><div><p className="eyebrow">5 DAYS, ONE JOURNEY</p><h2>매일 다른 현장에서<br />하나의 대동을 만납니다.</h2></div><p className="heading-note">2026 하반기 운영 일정 · 9.7–9.11<br /><span>4박 5일 과정이며, 과정 운영상 변동될 수 있습니다.</span></p></div>
+        <div className="section-heading row-heading"><div><p className="eyebrow">5 DAYS, ONE JOURNEY</p><h2>매일 다른 현장에서<br />하나의 대동을 만납니다.</h2></div><p className="heading-note">2026 하반기 운영 일정 · 9.14–9.18<br /><span>4박 5일 과정이며, 과정 운영상 변동될 수 있습니다.</span></p></div>
         <div className="day-tabs" role="tablist" aria-label="교육 일차 선택">
           {Object.keys(schedules).map((day) => <button role="tab" aria-selected={activeDay === day} className={activeDay === day ? "active" : ""} key={day} onClick={() => setActiveDay(day)}><strong>{day}</strong><span>{schedules[day].date} · {schedules[day].theme}</span></button>)}
         </div>
@@ -340,13 +340,13 @@ export default function Home() {
             {journey.items.map((item) => <article className={`schedule-item ${item.type === "vision" ? "vision-item" : ""}`} key={`${item.time}-${item.title}`}><time>{item.time}</time><div><span className={`type ${item.type === "vision" ? "type-vision" : item.type}`}>{({ welcome: "WELCOME", business: "BUSINESS", move: "MOVE", experience: "EXPERIENCE", vision: "VISIONING" })[item.type]}</span><h4>{item.title}</h4>{item.detail && <p>{item.detail}</p>}</div></article>)}
           </div>
         </div>
-        <div className="route-line"><span>서울사무소</span><i /><span>동부권역센터</span><i /><span>창녕비전캠퍼스</span><i /><span>성서통합R&D센터</span><i /><span>모빌리티 신공장</span><i /><span>대동금속</span><i /><span>대구공장</span><i /><span>그룹시험센터</span></div>
+        <div className="route-line"><span>서울사무소</span><i /><span>동부권역센터</span><i /><span>창녕비전캠퍼스</span><i /><span>성서통합R&D센터</span><i /><span>대구공장</span><i /><span>그룹시험센터</span><i /><span>대동기어</span><i /><span>대동모빌리티 S-Factory</span><i /><span>대동금속</span></div>
         <aside className="prep-bridge" aria-labelledby="prep-bridge-title">
           <div className="prep-bridge-copy"><p className="eyebrow light">BEFORE THE JOURNEY</p><h3 id="prep-bridge-title">출발 전,<br />이것만 확인하세요.</h3></div>
           <div className="prep-bridge-items">
             <div><span>01</span><strong>복장</strong><p>편안하고 깔끔한 사복</p></div>
             <div><span>02</span><strong>준비물</strong><p>세면도구 · 수건 · 상비약</p></div>
-            <div><span>03</span><strong>이동</strong><p>9.7 월요일 12:30 시작</p></div>
+            <div><span>03</span><strong>이동</strong><p>9.14 월요일 11:00 시작</p></div>
           </div>
           <a className="prep-bridge-link" href="/guide"><span>전체 준비 안내 확인</span><b>→</b></a>
         </aside>
