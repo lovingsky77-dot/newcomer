@@ -1,0 +1,2 @@
+CREATE INDEX `education_photos_uploaded_idx` ON `education_photos` (`uploaded_at`);--> statement-breakpoint
+CREATE INDEX `logistics_employee_idx` ON `logistics_responses` (`employee_number`,`submitted_at`);

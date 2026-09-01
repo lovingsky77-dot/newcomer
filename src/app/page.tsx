@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../lib/content";
 import { fetchQuizFromSupabase, submitQuizToSupabase } from "../lib/supabase";
+import JourneyDday from "./JourneyDday";
 
 const values = [
   { name: "창조", en: "CREATIVITY", copy: "익숙한 방식 너머의 가능성을 발견합니다." },
@@ -29,7 +30,6 @@ const valueDescription = {
 };
 
 export default function Home() {
-  const cursorRef = useRef<HTMLDivElement>(null);
   const [activeDay, setActiveDay] = useState("DAY 1");
   const [videoOpen, setVideoOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
@@ -59,36 +59,6 @@ export default function Home() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    const finePointer = window.matchMedia("(pointer: fine)");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const cursor = cursorRef.current;
-    if (!cursor || !finePointer.matches || reducedMotion.matches) return;
-
-    document.documentElement.classList.add("custom-cursor-enabled");
-    const moveCursor = (event: PointerEvent) => {
-      cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-      cursor.classList.add("is-visible");
-      const target = event.target as Element | null;
-      cursor.classList.toggle("is-active", Boolean(target?.closest("a, button, input, select, textarea, [role='tab']")));
-    };
-    const hideCursor = () => cursor.classList.remove("is-visible");
-    const pressCursor = () => cursor.classList.add("is-pressed");
-    const releaseCursor = () => cursor.classList.remove("is-pressed");
-
-    window.addEventListener("pointermove", moveCursor, { passive: true });
-    window.addEventListener("pointerdown", pressCursor, { passive: true });
-    window.addEventListener("pointerup", releaseCursor, { passive: true });
-    document.documentElement.addEventListener("mouseleave", hideCursor);
-    return () => {
-      document.documentElement.classList.remove("custom-cursor-enabled");
-      window.removeEventListener("pointermove", moveCursor);
-      window.removeEventListener("pointerdown", pressCursor);
-      window.removeEventListener("pointerup", releaseCursor);
-      document.documentElement.removeEventListener("mouseleave", hideCursor);
-    };
   }, []);
 
   const showToast = (msg: string) => {
@@ -275,11 +245,10 @@ export default function Home() {
 
   return (
     <main>
-      <div className="daedong-cursor" ref={cursorRef} aria-hidden="true"><span /></div>
       <header className="site-header">
         <a className="brand" href="#top" onClick={(event) => scrollToSection(event, "top")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
         <nav aria-label="주요 메뉴">
-          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a>
+          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a><a href="/inquiry">문의하기</a>
         </nav>
         <div className="header-actions">
           <a className="prep-utility-link" href="/guide"><small>CHECK</small><strong>참여 전 준비</strong><span>↗</span></a>
@@ -293,6 +262,7 @@ export default function Home() {
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-content">
           <p className="eyebrow light">AI TO THE FIELD · GREAT JOURNEY</p>
+          <JourneyDday />
           <h1>대동에서 시작하는<br /><em>Great Journey</em></h1>
           <p className="hero-copy">농업의 미래를 이해하고,<br className="mobile-only" /> 나의 미래를 설계하는 5일</p>
           <div className="hero-actions">
@@ -340,13 +310,12 @@ export default function Home() {
             {journey.items.map((item) => <article className={`schedule-item ${item.type === "vision" ? "vision-item" : ""}`} key={`${item.time}-${item.title}`}><time>{item.time}</time><div><span className={`type ${item.type === "vision" ? "type-vision" : item.type}`}>{({ welcome: "WELCOME", business: "BUSINESS", move: "MOVE", experience: "EXPERIENCE", vision: "VISIONING" })[item.type]}</span><h4>{item.title}</h4>{item.detail && <p>{item.detail}</p>}</div></article>)}
           </div>
         </div>
-        <div className="route-line"><span>서울사무소</span><i /><span>동부권역센터</span><i /><span>창녕비전캠퍼스</span><i /><span>성서통합R&D센터</span><i /><span>대구공장</span><i /><span>그룹시험센터</span><i /><span>대동기어</span><i /><span>대동모빌리티 S-Factory</span><i /><span>대동금속</span></div>
         <aside className="prep-bridge" aria-labelledby="prep-bridge-title">
           <div className="prep-bridge-copy"><p className="eyebrow light">BEFORE THE JOURNEY</p><h3 id="prep-bridge-title">출발 전,<br />이것만 확인하세요.</h3></div>
           <div className="prep-bridge-items">
             <div><span>01</span><strong>복장</strong><p>편안하고 깔끔한 사복</p></div>
-            <div><span>02</span><strong>준비물</strong><p>세면도구 · 수건 · 상비약</p></div>
-            <div><span>03</span><strong>이동</strong><p>9.14 월요일 11:00 시작</p></div>
+            <div><span>02</span><strong>필수지참</strong><p>세면도구 · 수건 · 개인 의약품</p></div>
+            <div><span>03</span><strong>집결</strong><p>9.14 월요일 10:50까지</p></div>
           </div>
           <a className="prep-bridge-link" href="/guide"><span>전체 준비 안내 확인</span><b>→</b></a>
         </aside>
@@ -377,7 +346,7 @@ export default function Home() {
         <div className="challenge-content"><p className="eyebrow light">DAEDONG-IN CHALLENGE</p><h2>나는 얼마나<br />대동인이 되었을까?</h2><p>7개의 질문으로 대동을 다시 만나고,<br />나의 핵심가치 유형을 발견해보세요.</p><button className="challenge-button" onClick={openQuiz}>챌린지 시작하기 <span>↗</span></button></div>
       </section>
 
-      <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="/guide">교육 준비 안내</a><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. Onboarding Journey Prototype.</small></footer>
+      <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="/guide">교육 준비 안내</a><a href="/inquiry">문의게시판</a><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. Onboarding Journey Prototype.</small></footer>
 
       {videoOpen && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="대동 미래농업 영상"><div className="video-modal"><button className="modal-close" onClick={() => setVideoOpen(false)} aria-label="영상 닫기">×</button><iframe src="https://www.youtube.com/embed/vjzp4rxfxDU?autoplay=1&rel=0" title="대동이 여는 미래농업 AI TO THE FIELD" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen /></div></div>}
 

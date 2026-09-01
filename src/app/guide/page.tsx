@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { JourneyCountdown, LogisticsResponse, PhotoBoard, SurveyGate } from "./GuideExperience";
 
 export const metadata: Metadata = {
   title: "교육 준비 안내 | DAEDONG Great Journey",
@@ -39,6 +40,7 @@ export default function GuidePage() {
           <Link href="/#journey">5일의 여정</Link>
           <Link href="/#future">미래사업</Link>
           <Link href="/#vision">Vision Map</Link>
+          <Link href="/inquiry">문의하기</Link>
         </nav>
         <div className="guide-header-actions">
           <span className="guide-current" aria-current="page">
@@ -68,53 +70,27 @@ export default function GuidePage() {
           </div>
           <div>
             <dt>STAY</dt>
-            <dd><strong>2인 1실</strong><br />비전캠퍼스</dd>
+            <dd><strong>1인 1실</strong><br />비전캠퍼스</dd>
           </div>
         </dl>
       </section>
 
-      <nav className="guide-tabs" aria-label="준비 안내 바로가기">
-        <a href="#before">참여 전 준비</a>
-        <a href="#travel">이동 안내</a>
-        <a href="#stay">숙박 안내</a>
-        <a href="#rules">숙소 준수사항</a>
-      </nav>
+      <JourneyCountdown />
 
-      <section className="guide-section" id="before">
-        <div className="guide-section-title">
-          <span>01</span>
-          <div>
-            <p className="eyebrow">GET READY</p>
-            <h2>참여 전 준비</h2>
-          </div>
-        </div>
-        <div className="guide-card-grid">
-          <article className="guide-card feature">
-            <span className="guide-card-no">DRESS</span>
-            <h3>편안하고 깔끔하게</h3>
-            <p>활동하기 좋은 단정한 사복을 권장합니다. 트레이닝복과 찢어진 청바지는 지양해 주세요. 근무복 착용은 개인 선택사항입니다.</p>
-          </article>
-          <article className="guide-card">
-            <span className="guide-card-no">PACK</span>
-            <h3>꼭 챙겨 주세요</h3>
-            <ul>
-              <li>개인 위생용품</li>
-              <li className="highlight">개인 수건 (필수)</li>
-              <li>저녁시간 활동복</li>
-              <li>개인 상비약</li>
-            </ul>
-          </article>
-          <article className="guide-card">
-            <span className="guide-card-no">EXPENSE</span>
-            <h3>교통비 처리</h3>
-            <p>교육 시작 전과 종료 후 사용한 교통비는 각 그룹사의 출장비 규정에 따라 처리합니다.</p>
-          </article>
-        </div>
-      </section>
+      <nav className="guide-tabs" aria-label="준비 안내 바로가기">
+        <a href="#travel">이동 안내</a>
+        <a href="#before">참여 전 준비</a>
+        <a href="#stay">숙박 안내</a>
+        <a href="#response">숙박·이동 응답</a>
+        <a href="#photos">사진 기록</a>
+        <a href="#survey">설문조사</a>
+        <a href="#rules">숙소 준수사항</a>
+        <Link href="/inquiry">문의하기 ↗</Link>
+      </nav>
 
       <section className="guide-section guide-travel" id="travel">
         <div className="guide-section-title inverse">
-          <span>02</span>
+          <span>01</span>
           <div>
             <p className="eyebrow light">HOW TO ARRIVE</p>
             <h2>이동 안내</h2>
@@ -127,23 +103,23 @@ export default function GuidePage() {
               <strong>교육 시작</strong>
             </div>
             <div className="travel-content">
-              <h3>월요일 오전 11시</h3>
-              <p>대중교통 이용자는 담당자 안내를 확인한 뒤 열차를 개인 예약합니다.</p>
+              <h3>월요일 오전 10시 50분까지</h3>
+              <p>서울 근무자는 서울사무소 3층 Universe로 집결합니다. 타지역 근무자는 아래 권장 열차를 확인해 주세요.</p>
               <div className="train-grid">
                 <div>
-                  <small>ARRIVAL</small>
-                  <strong>교육 시작 전 도착</strong>
-                  <span>집결 장소와 시간을 확인해 주세요.</span>
+                  <small>KTX 102</small>
+                  <strong>동대구역 → 서울역</strong>
+                  <span>교육 시작일 권장 열차</span>
                 </div>
                 <div>
-                  <small>TRAIN</small>
-                  <strong>개별 열차 예약</strong>
-                  <span>변경된 일정에 맞는 열차를 이용해 주세요.</span>
+                  <small>KTX 012</small>
+                  <strong>동대구역 → 서울역</strong>
+                  <span>교육 시작일 권장 열차</span>
                 </div>
                 <div>
-                  <small>NOTICE</small>
-                  <strong>담당자 안내 우선</strong>
-                  <span>세부 이동 안내는 별도 공지를 따릅니다.</span>
+                  <small>KTX-산천 312</small>
+                  <strong>동대구역 → 수서역</strong>
+                  <span>교육 시작일 권장 열차</span>
                 </div>
               </div>
             </div>
@@ -157,19 +133,53 @@ export default function GuidePage() {
               <h3>금요일 오후 1시 30분</h3>
               <div className="departure-grid">
                 <div>
-                  <small>서울권 교육생</small>
-                  <p>셔틀버스로 동대구역 이동<br /><b>예상 도착 오후 3시</b></p>
+                  <small>RETURN TRAIN</small>
+                  <p>교육 종료 후 이동시간을 고려해<br /><b>오후 2시 30분 이후 열차</b>를 예약해 주세요.</p>
                 </div>
                 <div>
-                  <small>대구권 교육생</small>
-                  <p>동일 셔틀버스로 용산역<br /><b>대구 지하철 2호선 하차</b></p>
+                  <small>BUSINESS TRIP</small>
+                  <p>이동간 발생한 교통비는<br /><b>그룹사 출장비 규정</b>에 따라 처리됩니다.</p>
                 </div>
                 <div>
-                  <small>개별 이동</small>
-                  <p>별도 개인 이동도<br /><b>가능합니다.</b></p>
+                  <small>SUPPORT</small>
+                  <p>교육 중 숙박과 식대는<br /><b>별도로 제공될 예정</b>입니다.</p>
                 </div>
               </div>
             </div>
+          </article>
+        </div>
+      </section>
+
+      <LogisticsResponse />
+
+      <section className="guide-section" id="before">
+        <div className="guide-section-title">
+          <span>02</span>
+          <div>
+            <p className="eyebrow">GET READY</p>
+            <h2>참여 전 준비</h2>
+          </div>
+        </div>
+        <div className="guide-card-grid">
+          <article className="guide-card feature">
+            <span className="guide-card-no">MUST PACK</span>
+            <h3>필수 지참</h3>
+            <ul>
+              <li className="highlight">개인 세면도구와 수건</li>
+              <li>개인 위생용품</li>
+              <li>저녁시간 활동복</li>
+              <li className="highlight">개인에게 필요한 약</li>
+            </ul>
+          </article>
+          <article className="guide-card">
+            <span className="guide-card-no">DRESS</span>
+            <h3>편안하고 깔끔하게</h3>
+            <p>활동하기 좋은 단정한 사복을 권장합니다. 트레이닝복과 찢어진 청바지는 지양해 주세요. 근무복 착용은 개인 선택사항입니다.</p>
+          </article>
+          <article className="guide-card">
+            <span className="guide-card-no">EXPENSE</span>
+            <h3>출장비 처리</h3>
+            <p>이동간 발생한 교통비는 각 그룹사의 출장비 규정에 따라 처리됩니다. 교육 중 숙박과 식대는 별도로 제공될 예정입니다.</p>
           </article>
         </div>
       </section>
@@ -184,26 +194,26 @@ export default function GuidePage() {
         </div>
         <div className="stay-layout">
           <div className="stay-lead">
-            <strong>2</strong>
+            <strong>1</strong>
             <span>PERSON / ROOM</span>
-            <h3>2인 1실로<br />배정됩니다.</h3>
+            <h3>1인 1실로<br />배정됩니다.</h3>
             <p>비전캠퍼스 내에는 세면도구를 구매할 수 있는 시설이 없습니다.</p>
           </div>
           <div className="stay-checklist">
-            <article>
-              <span>구비 품목</span>
-              <h3>샴푸 · 치약</h3>
-              <p>객실에는 샴푸와 치약만 준비되어 있습니다.</p>
-            </article>
             <article className="accent">
               <span>필수 지참</span>
               <h3>세면도구 · 수건</h3>
               <p>개인 세면도구와 수건을 반드시 챙겨 주세요.</p>
             </article>
             <article>
-              <span>상비약</span>
-              <h3>두통 · 감기 · 소화제</h3>
-              <p>기본 상비약은 구비되어 있으며, 개인에게 필요한 약은 별도로 준비합니다.</p>
+              <span>구비 품목</span>
+              <h3>샴푸 · 치약</h3>
+              <p>객실에는 샴푸와 치약만 준비되어 있습니다.</p>
+            </article>
+            <article>
+              <span>개인 의약품</span>
+              <h3>필요한 약 직접 준비</h3>
+              <p>개인에게 필요한 약은 반드시 별도로 준비해 주세요.</p>
             </article>
           </div>
         </div>
@@ -237,6 +247,9 @@ export default function GuidePage() {
         </div>
       </section>
 
+      <PhotoBoard />
+      <SurveyGate />
+
       <section className="guide-contact">
         <p className="eyebrow">NEED HELP?</p>
         <h2>궁금한 점은<br />교육 담당자에게 문의하세요.</h2>
@@ -249,6 +262,7 @@ export default function GuidePage() {
       <footer className="guide-footer">
         <img src="/images/daedong-logo.png" alt="DAEDONG" />
         <p>2026 하반기 Great Journey · 교육 준비 안내</p>
+        <Link href="/inquiry">문의게시판</Link>
         <Link href="/">홈으로 돌아가기</Link>
       </footer>
     </main>

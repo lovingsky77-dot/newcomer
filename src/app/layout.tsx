@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import DaedongCursor from "./DaedongCursor";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body><DaedongCursor />{children}</body>
     </html>
   );
 }

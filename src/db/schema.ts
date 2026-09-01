@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const submissions = sqliteTable("submissions", {
   id: text("id").primaryKey(),
@@ -29,3 +29,46 @@ export const quizQuestions = sqliteTable("quiz_questions", {
   sortOrder: integer("sort_order").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
+
+export const logisticsResponses = sqliteTable("logistics_responses", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  organization: text("organization").notNull(),
+  employeeNumber: text("employee_number").notNull(),
+  lodgingNeeded: text("lodging_needed").notNull(),
+  outboundMethod: text("outbound_method").notNull(),
+  returnMethod: text("return_method").notNull(),
+  note: text("note").notNull().default(""),
+  submittedAt: text("submitted_at").notNull(),
+}, (table) => [index("logistics_employee_idx").on(table.employeeNumber, table.submittedAt)]);
+
+export const educationPhotos = sqliteTable("education_photos", {
+  id: text("id").primaryKey(),
+  objectKey: text("object_key").notNull(),
+  contentType: text("content_type").notNull(),
+  fileName: text("file_name").notNull(),
+  caption: text("caption").notNull().default(""),
+  uploadedAt: text("uploaded_at").notNull(),
+}, (table) => [index("education_photos_uploaded_idx").on(table.uploadedAt)]);
+
+export const inquiries = sqliteTable("inquiries", {
+  id: text("id").primaryKey(),
+  publicCode: text("public_code").notNull(),
+  tokenHash: text("token_hash").notNull(),
+  category: text("category").notNull(),
+  title: text("title").notNull(),
+  status: text("status").notNull().default("open"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+}, (table) => [
+  uniqueIndex("inquiries_public_code_unique").on(table.publicCode),
+  index("inquiries_status_updated_idx").on(table.status, table.updatedAt),
+]);
+
+export const inquiryMessages = sqliteTable("inquiry_messages", {
+  id: text("id").primaryKey(),
+  inquiryId: text("inquiry_id").notNull(),
+  sender: text("sender").notNull(),
+  content: text("content").notNull(),
+  createdAt: text("created_at").notNull(),
+}, (table) => [index("inquiry_messages_thread_idx").on(table.inquiryId, table.createdAt)]);
