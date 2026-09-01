@@ -162,9 +162,9 @@ export default function GuidePage() {
             <span className="guide-card-no">MUST PACK</span>
             <h3>필수 지참</h3>
             <ul>
-              <li className="highlight">개인 세면도구 및 수건</li>
+              <li>개인 세면도구 및 수건</li>
               <li>저녁시간 활동복</li>
-              <li className="highlight">개인 의약품</li>
+              <li>개인 의약품</li>
             </ul>
           </article>
           <article className="guide-card">
@@ -248,20 +248,44 @@ export default function GuidePage() {
       <PhotoBoard />
       <SurveyGate />
 
-      <section className="guide-contact">
-        <p className="eyebrow">NEED HELP?</p>
-        <h2>궁금한 점은<br />교육 담당자에게 문의하세요.</h2>
+      <section className="guide-inquiry-cta" aria-labelledby="guide-inquiry-title">
+        <div>
+          <p className="eyebrow light">1:1 INQUIRY</p>
+          <h2 id="guide-inquiry-title">문의게시판</h2>
+          <p>교육 일정, 이동·숙박, 준비사항에 관한 문의를 비공개로 남길 수 있습니다.</p>
+        </div>
+        <div className="guide-inquiry-info">
+          <ul>
+            <li><span>01</span>문의 내용은 공개되지 않습니다.</li>
+            <li><span>02</span>교육 관리자만 내용을 확인합니다.</li>
+            <li><span>03</span>발급된 문의번호로 답변을 확인합니다.</li>
+          </ul>
+          <Link href="/inquiry">문의 작성 및 확인 <span>→</span></Link>
+        </div>
+      </section>
+
+      <section className="guide-contact" aria-labelledby="guide-contact-title">
+        <div>
+          <p className="eyebrow">CONTACT</p>
+          <h2 id="guide-contact-title">교육 담당자</h2>
+          <p>인사혁신팀(교육)</p>
+        </div>
         <a href="mailto:mwkim@daedong.co.kr">
-          mwkim@daedong.co.kr <span>↗</span>
+          <span>EMAIL</span><strong>mwkim@daedong.co.kr</strong><b>↗</b>
         </a>
-        <p>인사혁신팀(교육)</p>
       </section>
 
       <footer className="guide-footer">
-        <img src="/images/daedong-logo.png" alt="DAEDONG" />
-        <p>2026 하반기 Great Journey · 교육 준비 안내</p>
-        <Link href="/inquiry">문의게시판</Link>
-        <Link href="/">홈으로 돌아가기</Link>
+        <div className="guide-footer-brand">
+          <img src="/images/daedong-logo.png" alt="DAEDONG" />
+          <p>2026 하반기 Great Journey<br />교육 준비 안내</p>
+        </div>
+        <nav aria-label="하단 메뉴">
+          <Link href="/">홈</Link>
+          <Link href="/inquiry">문의게시판</Link>
+          <a href="mailto:mwkim@daedong.co.kr">교육 담당자</a>
+        </nav>
+        <small>© DAEDONG. All rights reserved.</small>
       </footer>
     </main>
   );
