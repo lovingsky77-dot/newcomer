@@ -30,7 +30,7 @@ export function JourneyCountdown() {
   const phase = now < START_AT ? "교육 시작까지" : now < END_AT ? "Great Journey 진행 중" : "Great Journey 완료";
   const duration = splitDuration(now < START_AT ? START_AT - now : now < END_AT ? END_AT - now : 0);
 
-  return <section className="journey-clock" aria-live="polite">
+  return <section className="journey-clock" aria-label="교육 시작까지 남은 시간">
     <div>
       <p className="eyebrow light">COUNTDOWN TO GREAT JOURNEY</p>
       <h2>{phase}</h2>

@@ -18,7 +18,7 @@ export default function JourneyDday() {
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
 
-  return <div className="hero-dday" aria-live="polite">
+  return <div className="hero-dday" aria-label="교육 시작까지 남은 시간">
     <span>{diff > 0 ? `D-${days}` : "NOW"}</span>
     <p>{diff > 0 ? `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")} 남음` : "Great Journey가 시작되었습니다"}</p>
   </div>;

@@ -18,6 +18,7 @@ export default function InquiryPage() {
   const [reply, setReply] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [copyMessage, setCopyMessage] = useState("");
   const [justCreated, setJustCreated] = useState(false);
 
   function saveInquiry(item: SavedInquiry) {
@@ -78,6 +79,16 @@ export default function InquiryPage() {
 
   const privateLink = useMemo(() => typeof window === "undefined" || !credentials.code ? "" : `${window.location.origin}/inquiry#${credentials.code}.${credentials.token}`, [credentials]);
 
+  async function copyValue(value: string, success: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyMessage(success);
+      window.setTimeout(() => setCopyMessage(""), 2500);
+    } catch {
+      setCopyMessage("복사하지 못했습니다. 직접 선택해 주세요.");
+    }
+  }
+
   return <main className="inquiry-page">
     <header className="inquiry-header">
       <Link className="brand" href="/" aria-label="Great Journey 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></Link>
@@ -123,11 +134,11 @@ export default function InquiryPage() {
     </section>}
 
     {mode === "thread" && thread && <section className="thread-section">
-      {justCreated && <div className="recovery-card"><div><h2>문의가 등록되었습니다.</h2><p>문의번호와 확인코드를 저장해 주세요.</p></div><dl><div><dt>문의번호</dt><dd>{credentials.code}</dd></div><div><dt>확인코드</dt><dd>{credentials.token}</dd></div></dl><button onClick={() => navigator.clipboard.writeText(privateLink).then(() => setMessage("문의 링크를 복사했습니다."))}>문의 링크 복사</button>{message && <span>{message}</span>}</div>}
+      {justCreated && <div className="recovery-card"><div><h2>문의가 등록되었습니다.</h2><p>이 기기에 자동 저장되었습니다. 다른 기기에서 확인하려면 아래 정보를 보관해 주세요.</p></div><dl><div><dt>문의번호</dt><dd>{credentials.code}</dd><button onClick={() => void copyValue(credentials.code, "문의번호를 복사했습니다.")}>복사</button></div><div><dt>확인코드</dt><dd>{credentials.token}</dd><button onClick={() => void copyValue(credentials.token, "확인코드를 복사했습니다.")}>복사</button></div></dl><button onClick={() => void copyValue(`문의번호: ${credentials.code}\n확인코드: ${credentials.token}\n문의 링크: ${privateLink}`, "문의 확인 정보를 복사했습니다.")}>문의 확인 정보 복사</button>{copyMessage && <span role="status">{copyMessage}</span>}</div>}
       <div className="thread-head"><div><p>{thread.category} · {thread.code}</p><h2>{thread.title}</h2></div><span className={`thread-status ${thread.status}`}>{thread.status === "answered" ? "답변 완료" : thread.status === "closed" ? "종료" : "답변 대기"}</span></div>
       <div className="conversation">{thread.messages.map((item) => <article className={item.sender} key={item.id}><div><span>{item.sender === "admin" ? "인사혁신팀(교육)" : "작성자"}</span><time>{new Date(item.createdAt).toLocaleString("ko-KR")}</time></div><p>{item.content}</p></article>)}</div>
       {thread.status !== "closed" && <form className="thread-reply" onSubmit={sendReply}><label>추가 메시지<textarea value={reply} maxLength={3000} onChange={(event) => setReply(event.target.value)} placeholder="관리자에게 추가로 전달할 내용을 작성해 주세요." required /></label>{status === "error" && <p className="form-error">{message}</p>}<button disabled={status === "loading"}>{status === "loading" ? "전송 중…" : "메시지 보내기"}<span>→</span></button></form>}
-      <div className="thread-tools"><button onClick={() => void loadThread(credentials.code, credentials.token)}>새 답변 확인 ↻</button><button onClick={() => navigator.clipboard.writeText(privateLink)}>문의 링크 복사</button></div>
+      <div className="thread-tools"><button onClick={() => void loadThread(credentials.code, credentials.token)}>새 답변 확인 ↻</button><button onClick={() => void copyValue(privateLink, "문의 링크를 복사했습니다.")}>문의 링크 복사</button>{copyMessage && <span role="status">{copyMessage}</span>}</div>
     </section>}
 
     <footer className="inquiry-footer"><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>문의 내용은 공개되지 않으며 관리자와 작성자만 확인할 수 있습니다.</p><Link href="/guide">교육 준비 안내로 돌아가기 →</Link></footer>

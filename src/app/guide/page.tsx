@@ -55,9 +55,8 @@ export default function GuidePage() {
       <section className="guide-hero">
         <div className="guide-hero-grid" aria-hidden="true" />
         <div className="guide-hero-copy">
-          <p className="eyebrow light">BEFORE THE JOURNEY</p>
-          <h1>가볍게 준비하고,<br />온전히 몰입하세요.</h1>
-          <p>출발부터 숙박까지 꼭 필요한 내용만 한눈에 확인하세요.</p>
+          <h1>참여 전 준비</h1>
+          <p>교육 일정과 이동·숙박 안내를 확인해 주세요.</p>
         </div>
         <dl className="guide-date-card">
           <div>
@@ -150,8 +149,6 @@ export default function GuidePage() {
         </div>
       </section>
 
-      <LogisticsResponse />
-
       <section className="guide-section" id="before">
         <div className="guide-section-title">
           <span>02</span>
@@ -165,10 +162,9 @@ export default function GuidePage() {
             <span className="guide-card-no">MUST PACK</span>
             <h3>필수 지참</h3>
             <ul>
-              <li className="highlight">개인 세면도구와 수건</li>
-              <li>개인 위생용품</li>
+              <li className="highlight">개인 세면도구 및 수건</li>
               <li>저녁시간 활동복</li>
-              <li className="highlight">개인에게 필요한 약</li>
+              <li className="highlight">개인 의약품</li>
             </ul>
           </article>
           <article className="guide-card">
@@ -218,6 +214,8 @@ export default function GuidePage() {
           </div>
         </div>
       </section>
+
+      <LogisticsResponse />
 
       <section className="guide-section rules-section" id="rules">
         <div className="guide-section-title inverse">

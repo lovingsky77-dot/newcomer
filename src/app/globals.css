@@ -2301,48 +2301,69 @@ textarea:focus-visible {
 
 .response-form {
   display: grid;
-  gap: 24px;
-  max-width: 760px;
+  gap: 28px;
+  width: min(100%, 900px);
 }
 
 .form-row.two {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
+}
+
+.form-row label {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.form-row input {
+  width: 100%;
+  min-width: 0;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: #ffffff;
 }
 
 .response-form fieldset {
-  border: 1px solid var(--line);
-  padding: 20px;
-  border-radius: 4px;
+  min-width: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 24px 0 0;
   margin: 0;
 }
 
 .response-form legend {
   font-size: 13px;
   font-weight: 800;
-  padding: 0 8px;
+  padding: 0;
   color: var(--ink);
 }
 
 .choice-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 190px));
+  gap: 12px;
 }
 
 .choice-row label {
-  min-height: 48px;
-  padding: 10px 20px;
+  position: relative;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0 18px;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 2px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
-  background: var(--paper);
+  background: #ffffff;
   transition: all 0.2s ease;
 }
 
@@ -2353,9 +2374,16 @@ textarea:focus-visible {
 }
 
 .choice-row input[type="radio"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--red);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice-row label:focus-within {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
 }
 
 .field-note {
@@ -2378,7 +2406,8 @@ textarea:focus-visible {
 }
 
 .response-form textarea {
-  min-height: 100px;
+  min-height: 140px;
+  width: 100%;
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -3748,6 +3777,21 @@ textarea:focus-visible {
   .form-row.two {
     grid-template-columns: 1fr;
   }
+  .response-form {
+    width: 100%;
+    gap: 24px;
+  }
+  .choice-row {
+    grid-template-columns: 1fr;
+  }
+  .choice-row label {
+    min-height: 52px;
+    justify-content: flex-start;
+  }
+  .response-submit {
+    width: 100%;
+    min-width: 0;
+  }
   .photo-heading {
     flex-direction: column;
     align-items: flex-start;
@@ -3827,9 +3871,291 @@ textarea:focus-visible {
   }
 }
 
-/* The original stylesheet remains as a low-priority fallback. The reviewed
-   design system above takes precedence without relying on source order. */
-@layer legacy {
+/* Final UX quality pass ---------------------------------------------------- */
+.guide-hero-copy {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.guide-date-card {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.guide-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size: 25% 100%, 25% 100%;
+}
+
+.vision-submit:disabled {
+  cursor: not-allowed;
+  opacity: .42;
+}
+
+.site-header a,
+.site-header button,
+.guide-header a,
+.inquiry-header a,
+footer a,
+footer button,
+.admin-table-wrap td button,
+.question-admin-list button,
+.admin-export-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.guide-home-link {
+  min-width: 44px;
+  justify-content: center;
+}
+
+.guide-contact a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.admin-main,
+.admin-section,
+.admin-table-wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-table-wrap th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+.admin-table-wrap .note-cell {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logistics-tools {
+  flex-wrap: wrap;
+}
+
+.admin-mobile-list {
+  display: none;
+}
+
+.admin-inquiry-actions button {
+  min-height: 48px;
+}
+
+.admin-danger-zone {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #e0b2aa;
+}
+
+.admin-danger-zone strong {
+  color: #b42318;
+  font-size: 13px;
+}
+
+.admin-danger-zone p {
+  margin: 6px 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.admin-danger-zone .delete-inquiry {
+  min-height: 44px;
+  width: 100%;
+  border: 1px solid #c94a35;
+  color: #b42318;
+  font-weight: 800;
+}
+
+.admin-notice {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 100;
+  padding: 14px 18px;
+  background: var(--dark);
+  color: #fff;
+  border-left: 4px solid var(--red);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.recovery-card dl > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.recovery-card dl dt,
+.recovery-card dl dd {
+  grid-column: 1;
+}
+
+.recovery-card dl button {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-height: 44px;
+  background: transparent;
+  color: #fff;
+}
+
+.thread-tools {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.thread-tools button {
+  min-height: 44px;
+}
+
+.thread-tools span {
+  width: 100%;
+  text-align: right;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .guide-hero {
+    min-height: auto;
+    align-items: start;
+  }
+
+  .guide-hero-copy,
+  .guide-date-card {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .day-tabs,
+  .guide-tabs {
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 0, #000 88%, transparent 100%);
+  }
+
+  .day-tabs::-webkit-scrollbar,
+  .guide-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .journey-clock dl {
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .journey-clock dl > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .journey-clock dl > div:nth-child(-n+2) {
+    border-bottom: 1px solid rgba(255,255,255,.24);
+  }
+
+  .table-tools,
+  .logistics-tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .table-tools input,
+  .table-tools select {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+  }
+
+  .admin-table-wrap > table {
+    display: none;
+  }
+
+  .admin-mobile-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .admin-mobile-list article {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .admin-mobile-list article > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .admin-mobile-list h3 {
+    margin: 10px 0 14px;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-mobile-list p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .admin-mobile-list button {
+    min-height: 44px;
+    font-weight: 800;
+  }
+
+  .admin-mobile-list dl {
+    display: grid;
+    gap: 8px;
+    margin: 14px 0 0;
+  }
+
+  .admin-mobile-list dl div {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .admin-mobile-list dt {
+    color: var(--muted);
+  }
+
+  .admin-mobile-list dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-drawer,
+  .question-editor {
+    width: 100vw;
+    max-width: 100%;
+    padding: 64px 20px 28px;
+  }
+
+  .admin-notice {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+  }
+}
+
+/* Retired legacy rules are kept temporarily for comparison but never rendered. */
+@media (max-width: 0px) {
 .eyebrow {
   margin: 0 0 20px;
   font-size: 11px;

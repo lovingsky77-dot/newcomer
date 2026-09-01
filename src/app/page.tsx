@@ -199,6 +199,7 @@ export default function Home() {
   const currentQuestion = quizStep >= 0 ? quizQuestions[quizStep] : null;
   const journey = schedules[activeDay];
   const progress = quizStep < 0 ? 0 : ((quizStep + 1) / quizQuestions.length) * 100;
+  const visionComplete = selectedValues.length > 0 && selectedStrengths.length > 0 && visionText.trim().length > 0;
 
   function toggleChoice(list: string[], setter: (next: string[]) => void, value: string) {
     if (list.includes(value)) setter(list.filter((item) => item !== value));
@@ -206,6 +207,11 @@ export default function Home() {
   }
 
   function openQuiz() {
+    if (!visionComplete) {
+      document.getElementById("vision")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      showToast("Vision Map을 먼저 작성해 주세요.");
+      return;
+    }
     setQuizStep(-1);
     setAnswers({});
     setResult(null);
@@ -248,11 +254,11 @@ export default function Home() {
       <header className="site-header">
         <a className="brand" href="#top" onClick={(event) => scrollToSection(event, "top")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
         <nav aria-label="주요 메뉴">
-          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a><a href="/inquiry">문의하기</a>
+          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a><a href="/inquiry">문의게시판</a>
         </nav>
         <div className="header-actions">
           <a className="prep-utility-link" href="/guide"><small>CHECK</small><strong>참여 전 준비</strong><span>↗</span></a>
-          <button className="header-cta" onClick={openQuiz}>대동인 챌린지 <span>↗</span></button>
+          <a className="header-cta" href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map 시작 <span>↘</span></a>
         </div>
       </header>
 
@@ -266,7 +272,7 @@ export default function Home() {
           <h1>대동에서 시작하는<br /><em>Great Journey</em></h1>
           <p className="hero-copy">농업의 미래를 이해하고,<br className="mobile-only" /> 나의 미래를 설계하는 5일</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#journey" onClick={(event) => scrollToSection(event, "journey")}>여정 시작하기 <span>↓</span></a>
+            <a className="primary-button" href="#journey" onClick={(event) => scrollToSection(event, "journey")}>교육 일정 확인 <span>↓</span></a>
             <button className="text-button" onClick={() => setVideoOpen(true)}><span className="play">▶</span> 30초로 만나는 대동의 미래</button>
           </div>
         </div>
@@ -302,7 +308,7 @@ export default function Home() {
       <section className="journey section-pad" id="journey">
         <div className="section-heading row-heading"><div><p className="eyebrow">5 DAYS, ONE JOURNEY</p><h2>매일 다른 현장에서<br />하나의 대동을 만납니다.</h2></div><p className="heading-note">2026 하반기 운영 일정 · 9.14–9.18<br /><span>4박 5일 과정이며, 과정 운영상 변동될 수 있습니다.</span></p></div>
         <div className="day-tabs" role="tablist" aria-label="교육 일차 선택">
-          {Object.keys(schedules).map((day) => <button role="tab" aria-selected={activeDay === day} className={activeDay === day ? "active" : ""} key={day} onClick={() => setActiveDay(day)}><strong>{day}</strong><span>{schedules[day].date} · {schedules[day].theme}</span></button>)}
+          {Object.keys(schedules).map((day) => <button role="tab" aria-selected={activeDay === day} className={activeDay === day ? "active" : ""} key={day} onClick={() => setActiveDay(day)}><strong>{schedules[day].date}</strong><span>{day} · {schedules[day].theme}</span></button>)}
         </div>
         <div className="schedule-panel">
           <div className="schedule-intro"><p>{activeDay}</p><h3>{journey.theme}</h3><span>PLACE</span><strong>{journey.place}</strong></div>
@@ -334,19 +340,19 @@ export default function Home() {
       </section>
 
       <section className="vision section-pad" id="vision">
-        <div className="vision-copy"><p className="eyebrow light">MY VISION MAP</p><h2>이제, 대동에서의<br />나를 그려볼 차례입니다.</h2><p>가치와 강점, 목표를 한 장의 방향으로 연결해보세요.<br />작성한 내용은 퀴즈 완료 시 참여 이력과 함께 저장됩니다.</p></div>
+        <div className="vision-copy"><p className="eyebrow light">MY VISION MAP</p><h2>이제, 대동에서의<br />나를 그려볼 차례입니다.</h2><p>가치와 강점, 목표를 한 장의 방향으로 연결해보세요.<br />작성 내용은 이번 방문 동안 유지되며, 퀴즈 완료 시 참여 이력과 함께 저장됩니다.</p></div>
         <div className="vision-builder">
           <div className="builder-step"><div className="step-title"><span>STEP 01</span><h3>나에게 중요한 가치를 선택하세요.</h3><small>최대 3개</small></div><div className="chip-grid">{values.map((item) => <button className={selectedValues.includes(item.name) ? "selected" : ""} onClick={() => toggleChoice(selectedValues, setSelectedValues, item.name)} key={item.name}>{item.name}<small>{item.en}</small></button>)}</div></div>
           <div className="builder-step"><div className="step-title"><span>STEP 02</span><h3>나를 움직이는 강점을 골라보세요.</h3><small>최대 3개</small></div><div className="strength-grid">{strengths.map((item) => <button className={selectedStrengths.includes(item) ? "selected" : ""} onClick={() => toggleChoice(selectedStrengths, setSelectedStrengths, item)} key={item}>{item}</button>)}</div></div>
-          <div className="builder-step"><div className="step-title"><span>STEP 03</span><h3>대동에서 이루고 싶은 목표를 적어보세요.</h3><small>{visionText.length}/300</small></div><textarea maxLength={300} value={visionText} onChange={(event) => setVisionText(event.target.value)} placeholder="예: 현장의 목소리와 기술을 연결해 농업의 변화를 만드는 사람이 되겠습니다." /><button className="vision-submit" onClick={openQuiz}>Vision Map 완료 · 챌린지 시작 <span>→</span></button></div>
+          <div className="builder-step"><div className="step-title"><span>STEP 03</span><h3>대동에서 이루고 싶은 목표를 적어보세요.</h3><small>{visionText.length}/300</small></div><textarea maxLength={300} value={visionText} onChange={(event) => setVisionText(event.target.value)} placeholder="예: 현장의 목소리와 기술을 연결해 농업의 변화를 만드는 사람이 되겠습니다." /><button className="vision-submit" disabled={!visionComplete} onClick={openQuiz}>Vision Map 완료 · 챌린지 시작 <span>→</span></button></div>
         </div>
       </section>
 
       <section className="challenge section-pad" id="challenge">
-        <div className="challenge-content"><p className="eyebrow light">DAEDONG-IN CHALLENGE</p><h2>나는 얼마나<br />대동인이 되었을까?</h2><p>7개의 질문으로 대동을 다시 만나고,<br />나의 핵심가치 유형을 발견해보세요.</p><button className="challenge-button" onClick={openQuiz}>챌린지 시작하기 <span>↗</span></button></div>
+        <div className="challenge-content"><p className="eyebrow light">DAEDONG-IN CHALLENGE</p><h2>나는 얼마나<br />대동인이 되었을까?</h2><p>7개의 질문으로 대동을 다시 만나고,<br />나의 핵심가치 유형을 발견해보세요.</p><button className="challenge-button" onClick={openQuiz}>{visionComplete ? "챌린지 시작하기" : "Vision Map 먼저 작성하기"} <span>↗</span></button></div>
       </section>
 
-      <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="/guide">교육 준비 안내</a><a href="/inquiry">문의게시판</a><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. Onboarding Journey Prototype.</small></footer>
+      <footer><div><img src="/images/daedong-logo.png" alt="DAEDONG" /><p>AI, 로보틱스 기반 미래농업 리딩 기업</p></div><div><p>운영 · 인사혁신팀(교육)</p><a href="/guide">교육 준비 안내</a><a href="/inquiry">문의게시판</a><a href="mailto:mwkim@daedong.co.kr">개인정보 문의</a><button onClick={() => setPrivacyOpen(true)}>개인정보 수집·이용 안내</button><a href="/admin">관리자</a></div><small>© DAEDONG. All rights reserved.</small></footer>
 
       {videoOpen && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="대동 미래농업 영상"><div className="video-modal"><button className="modal-close" onClick={() => setVideoOpen(false)} aria-label="영상 닫기">×</button><iframe src="https://www.youtube.com/embed/vjzp4rxfxDU?autoplay=1&rel=0" title="대동이 여는 미래농업 AI TO THE FIELD" allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen /></div></div>}
 
