@@ -4137,6 +4137,88 @@ footer button,
   font-size: 11px;
 }
 
+.site-footer {
+  min-height: 270px;
+  padding: 48px max(5.5vw, 24px) 30px;
+  display: grid;
+  grid-template-columns: minmax(280px, .8fr) minmax(520px, 1.2fr);
+  grid-template-rows: 1fr auto;
+  column-gap: clamp(48px, 8vw, 120px);
+  background: #111310;
+  color: #fff;
+  border-top: 6px solid var(--red);
+}
+
+.site-footer-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.site-footer-brand img {
+  width: 154px;
+  height: auto;
+}
+
+.site-footer-brand p {
+  margin: 0;
+  padding-left: 28px;
+  border-left: 1px solid rgba(255, 255, 255, .22);
+  color: rgba(255, 255, 255, .62);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.site-footer-info {
+  display: grid;
+  align-content: start;
+  justify-items: end;
+  gap: 26px;
+}
+
+.site-footer-info > p {
+  margin: 0;
+  color: rgba(255, 255, 255, .72);
+  font-size: 13px;
+}
+
+.site-footer-info > p span {
+  margin-right: 12px;
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.site-footer-info nav {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+}
+
+.site-footer-info nav a,
+.site-footer-info nav button {
+  min-height: 44px;
+  padding: 0;
+  color: rgba(255, 255, 255, .82);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.site-footer-info nav a:hover,
+.site-footer-info nav button:hover {
+  color: var(--red);
+}
+
+.site-footer > small {
+  grid-column: 1 / -1;
+  padding-top: 26px;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  color: rgba(255, 255, 255, .4);
+  font-size: 11px;
+}
+
 .admin-main,
 .admin-section,
 .admin-table-wrap {
@@ -4296,6 +4378,55 @@ footer button,
 
   .guide-footer > small {
     grid-column: 1;
+  }
+
+  .site-footer {
+    min-height: 0;
+    padding: 40px 20px 28px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 34px;
+  }
+
+  .site-footer-brand {
+    display: grid;
+    gap: 18px;
+  }
+
+  .site-footer-brand p {
+    padding: 0;
+    border-left: 0;
+  }
+
+  .site-footer-info {
+    justify-items: start;
+    gap: 14px;
+  }
+
+  .site-footer-info nav {
+    justify-content: flex-start;
+    gap: 4px 22px;
+  }
+
+  .site-footer-info nav a,
+  .site-footer-info nav button {
+    min-width: 44px;
+  }
+
+  .site-footer > small {
+    grid-column: 1;
+  }
+
+  .inquiry-footer {
+    padding: 36px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inquiry-footer a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .guide-hero {
