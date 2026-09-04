@@ -6,7 +6,8 @@ if (!password) {
   process.exit(1);
 }
 
-const iterations = 210_000;
+// Cloudflare Workers Web Crypto currently accepts PBKDF2 counts up to 100,000.
+const iterations = 100_000;
 const salt = randomBytes(16);
 const hash = pbkdf2Sync(password, salt, iterations, 32, "sha256");
 const encode = (value) => value.toString("base64url");
