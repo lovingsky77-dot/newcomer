@@ -30,3 +30,29 @@ test("photo uploads settle on success, network failure, timeout and proxy errors
     }
   } finally { globalThis.XMLHttpRequest = original; }
 });
+
+test("large photos use bounded chunks, finalize once, and clean up temporary uploads", async () => {
+  const original = globalThis.XMLHttpRequest;
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (url, options) => { calls.push({ method: options.method, url }); return new Response(); };
+  globalThis.XMLHttpRequest = class {
+    upload = {};
+    open(method, url) { this.method = method; this.url = url; }
+    setRequestHeader() {}
+    send(body) {
+      calls.push({ method: this.method, url: this.url, size: body instanceof Blob ? body.size : 0 });
+      this.status = 200;
+      this.responseText = JSON.stringify(this.method === "POST" ? { ok: true, id: "test-session", chunkSize: 524288 } : { ok: true });
+      queueMicrotask(() => this.onload());
+    }
+  };
+  try {
+    const file = new File([new Uint8Array(2 * 1024 * 1024 + 13)], "large.jpg", { type: "image/jpeg" });
+    await uploadPhoto(file, "", () => {});
+    assert.deepEqual(calls.map((call) => call.method), ["POST", "PUT", "PUT", "PUT", "PUT", "PUT", "PATCH", "DELETE"]);
+    const chunks = calls.filter((call) => call.method === "PUT");
+    assert.equal(chunks.reduce((sum, call) => sum + call.size, 0), file.size);
+    assert.ok(chunks.every((call) => call.size <= 524288));
+  } finally { globalThis.XMLHttpRequest = original; globalThis.fetch = originalFetch; }
+});
