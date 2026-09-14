@@ -20,12 +20,12 @@ export const schedules: Record<string, { date: string; place: string; theme: str
   },
   "DAY 2": {
     date: "9/15",
-    place: "서울사무소 · 동부권역센터 · 창녕비전캠퍼스",
+    place: "서울사무소 5층 식당 · 동부권역센터 · 창녕비전캠퍼스",
     theme: "사업을 읽는 시선",
     items: [
-      { time: "09:00", title: "대동 농기계 상품 소개", type: "business", detail: "1시간" },
-      { time: "10:00", title: "모빌리티 & 로보틱스 사업소개", type: "business", detail: "1시간" },
-      { time: "11:00", title: "Agtech & AILab 사업소개", type: "business", detail: "1시간" },
+      { time: "09:00", title: "대동 농기계 상품 소개", type: "business", detail: "1시간 · 서울사무소 5층 식당 (장소 변경)" },
+      { time: "10:00", title: "모빌리티 & 로보틱스 사업소개", type: "business", detail: "1시간 · 서울사무소 5층 식당" },
+      { time: "11:00", title: "Agtech & AILab 사업소개", type: "business", detail: "1시간 · 서울사무소 5층 식당" },
       { time: "12:00", title: "점심 및 이동", type: "move", detail: "서울사무소 → 동부권역센터" },
       { time: "15:30", title: "권역센터 소개 및 현장투어", type: "experience", detail: "1시간" },
       { time: "16:30", title: "비전캠퍼스로 이동", type: "move", detail: "동부권역센터 → 창녕비전캠퍼스" },

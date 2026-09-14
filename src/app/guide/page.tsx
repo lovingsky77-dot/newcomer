@@ -103,7 +103,8 @@ export default function GuidePage() {
             </div>
             <div className="travel-content">
               <h3>월요일 오전 10시 50분까지</h3>
-              <p>서울 근무자는 서울사무소 3층 Universe로 집결합니다. 타지역 근무자는 아래 권장 열차를 확인해 주세요.</p>
+              <p>교육 시작일(9/14) 서울 근무자는 서울사무소 3층 Universe로 집결합니다. 타지역 근무자는 아래 권장 열차를 확인해 주세요.</p>
+              <p><strong>2일차(9/15) 장소 변경: 서울사무소 3층 Universe → 5층 식당</strong><br />오전 9시 교육부터 5층 식당에서 진행됩니다.</p>
               <div className="train-grid">
                 <div>
                   <small>KTX 102</small>

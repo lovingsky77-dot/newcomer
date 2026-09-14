@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import DaedongCursor from "./DaedongCursor";
+import VenueChangeNotice from "./VenueChangeNotice";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body><DaedongCursor />{children}</body>
+      <body><DaedongCursor />{children}<VenueChangeNotice /></body>
     </html>
   );
 }
