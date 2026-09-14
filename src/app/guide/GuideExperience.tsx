@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { uploadPhoto } from "../../lib/photo-upload";
 
 const START_AT = new Date("2026-09-14T11:00:00+09:00").getTime();
 const END_AT = new Date("2026-09-18T13:30:00+09:00").getTime();
@@ -84,6 +85,9 @@ export function LogisticsResponse() {
 }
 
 export function PhotoBoard() {
+  const fileInput = useRef<HTMLInputElement>(null);
+  const uploadLock = useRef(false);
+  const [progress, setProgress] = useState("");
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [caption, setCaption] = useState("");
   const [files, setFiles] = useState<File[]>([]);
@@ -92,14 +96,20 @@ export function PhotoBoard() {
   const [active, setActive] = useState(0);
 
   async function loadPhotos() {
-    const response = await fetch("/api/photos", { cache: "no-store" });
-    if (!response.ok) return;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    try {
+    const response = await fetch("/api/photos", { cache: "no-store", signal: controller.signal });
+    if (!response.ok) throw new Error("사진 목록을 불러오지 못했습니다.");
     const data = await response.json();
     setPhotos(data.photos || []);
+    } finally { window.clearTimeout(timeout); }
   }
 
   useEffect(() => {
-    const timer = window.setTimeout(() => { void loadPhotos(); }, 0);
+    const timer = window.setTimeout(() => { void loadPhotos().catch(() => {
+      setMessage("사진 목록을 불러오지 못했습니다. 새로고침해 주세요."); setStatus("error");
+    }); }, 0);
     return () => window.clearTimeout(timer);
   }, []);
   useEffect(() => {
@@ -110,15 +120,31 @@ export function PhotoBoard() {
 
   async function upload(event: React.FormEvent) {
     event.preventDefault();
+    if (uploadLock.current) return;
     if (!files.length) { setStatus("error"); setMessage("업로드할 사진을 선택해 주세요."); return; }
+    if (files.some((file) => file.size > 15 * 1024 * 1024)) {
+      setStatus("error"); setMessage("사진은 파일당 15MB까지 업로드할 수 있습니다."); return;
+    }
+    uploadLock.current = true;
     setStatus("uploading"); setMessage("");
-    const body = new FormData();
-    files.forEach((file) => body.append("photos", file));
-    body.append("caption", caption);
-    const response = await fetch("/api/photos", { method: "POST", body });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) { setStatus("error"); setMessage(data.error || "사진을 업로드하지 못했습니다."); return; }
-    setStatus("done"); setMessage(`${files.length}장의 사진이 Great Journey 기록에 추가되었습니다.`); setFiles([]); setCaption(""); setActive(0); await loadPhotos();
+    let completed = 0;
+    try {
+      for (const file of files) {
+        setProgress(`${completed + 1}/${files.length}장 · 0%`);
+        await uploadPhoto(file, caption, (percent) => setProgress(`${completed + 1}/${files.length}장 · ${percent === 100 ? "저장 중" : `${percent}%`}`));
+        completed += 1;
+      }
+      setStatus("done"); setMessage(`${completed}장의 사진이 업로드되었습니다.`);
+      setFiles([]); setCaption(""); setActive(0);
+      if (fileInput.current) fileInput.current.value = "";
+    } catch (error) {
+      setFiles(files.slice(completed));
+      setStatus("error");
+      setMessage(`${completed ? `${completed}장은 저장되었습니다. 남은 사진을 다시 업로드해 주세요. ` : ""}${error instanceof Error ? error.message : "사진 업로드에 실패했습니다. 다시 시도해 주세요."}`);
+    } finally {
+      uploadLock.current = false; setProgress("");
+    }
+    if (completed) await loadPhotos().catch(() => setMessage(`${completed}장은 저장되었습니다. 사진 목록은 새로고침 후 확인해 주세요.`));
   }
 
   const current = photos[active] || null;
@@ -133,9 +159,10 @@ export function PhotoBoard() {
       </div>
       <form className="photo-upload" onSubmit={upload}>
         <span className="upload-no">UPLOAD</span><h3>교육 사진 올리기</h3><p>JPG, PNG, WEBP, HEIC · 파일당 15MB<br />한 번에 최대 10장까지 선택할 수 있습니다.</p>
-        <label className="file-picker"><input type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple onChange={(e) => setFiles(Array.from(e.target.files || []).slice(0, 10))} /><span>{selectedText}</span><b>＋</b></label>
+        <label className="file-picker"><input ref={fileInput} disabled={status === "uploading"} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple onChange={(e) => setFiles(Array.from(e.target.files || []).slice(0, 10))} /><span>{selectedText}</span><b>＋</b></label>
         <label className="caption-field">사진 설명 <span>선택</span><input value={caption} maxLength={120} onChange={(e) => setCaption(e.target.value)} placeholder="예: DAY 3, 대구공장에서" /></label>
-        {(status === "error" || status === "done") && <p className={status === "error" ? "form-error" : "upload-success"}>{message}</p>}
+        {status === "uploading" && <p role="status" aria-live="polite">{progress}</p>}
+        {(status === "error" || status === "done") && <p role="status" className={status === "error" ? "form-error" : "upload-success"}>{message}</p>}
         <button type="submit" disabled={status === "uploading"}>{status === "uploading" ? "업로드 중…" : "사진 업로드"}<span>↗</span></button>
       </form>
     </div>

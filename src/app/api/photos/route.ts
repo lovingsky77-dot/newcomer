@@ -25,6 +25,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  try {
   const form = await request.formData();
   const caption = String(form.get("caption") || "").trim().slice(0, 120);
   const files = form.getAll("photos").filter((item): item is File => item instanceof File && item.size > 0);
@@ -53,4 +54,8 @@ export async function POST(request: Request) {
   }
 
   return Response.json({ ok: true, uploaded });
+  } catch (error) {
+    console.error("[photos] upload failed", error);
+    return Response.json({ error: "사진 저장 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요." }, { status: 503 });
+  }
 }
