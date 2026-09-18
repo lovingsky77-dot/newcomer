@@ -28,6 +28,8 @@ test("renders the education preparation guide and links it from the homepage", a
   assert.match(home, /전체 준비 안내 확인/);
   assert.doesNotMatch(home, /prep-nav-link/);
   assert.match(guide, /참여 전 준비/);
+  assert.match(guide, /href="#survey">설문조사<\/a>\s*<a href="#video">교육 영상<\/a>/);
+  assert.match(guide, /<SurveyGate \/>\s*<EducationVideo \/>/);
   assert.match(guide, /이동 안내/);
   assert.match(guide, /숙박 안내/);
   assert.match(guide, /숙소 준수사항/);

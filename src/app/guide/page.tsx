@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { JourneyCountdown, LogisticsResponse, PhotoBoard, SurveyGate } from "./GuideExperience";
+import EducationVideo from "./EducationVideo";
 
 export const metadata: Metadata = {
   title: "교육 준비 안내 | DAEDONG Great Journey",
@@ -83,6 +84,7 @@ export default function GuidePage() {
         <a href="#response">숙박·이동 응답</a>
         <a href="#photos">사진 기록</a>
         <a href="#survey">설문조사</a>
+        <a href="#video">교육 영상</a>
         <a href="#rules">숙소 준수사항</a>
         <Link href="/inquiry">문의하기 ↗</Link>
       </nav>
@@ -248,6 +250,7 @@ export default function GuidePage() {
 
       <PhotoBoard />
       <SurveyGate />
+      <EducationVideo />
 
       <section className="guide-inquiry-cta" aria-labelledby="guide-inquiry-title">
         <div>

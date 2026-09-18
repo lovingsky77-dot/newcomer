@@ -1,0 +1,13 @@
+.section { padding: 64px max(5.5vw, 24px); background: #f7f7f4; color: #111310; scroll-margin-top: 90px; }
+.heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; }
+.heading .label { margin: 0 0 12px; color: #b52d17; font-size: 14px; font-weight: 800; letter-spacing: .1em; }
+.heading h2 { margin: 0 0 12px; font-size: clamp(30px, 4vw, 48px); line-height: 1.2; letter-spacing: -.04em; }
+.heading p { margin: 0; font-size: 16px; line-height: 1.6; }
+.section .download { display: inline-flex; justify-content: space-between; align-items: center; gap: 32px; min-height: 48px; padding: 12px 20px; background: #111310; color: #fff; font-size: 16px; font-weight: 700; text-decoration: none; }
+.download:focus-visible, .player:focus-visible { outline: 3px solid #ef3f23; outline-offset: 5px; }
+.player { display: block; width: 100%; aspect-ratio: 16 / 9; background: #111310; }
+.section .note { margin: 16px 0 0; color: #555b52; font-size: 14px; line-height: 1.7; }
+@media (max-width: 600px) {
+  .section { padding: 40px 20px; }
+  .heading { flex-direction: column; align-items: stretch; }
+}
