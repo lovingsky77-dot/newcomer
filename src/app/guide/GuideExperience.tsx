@@ -6,7 +6,8 @@ import { uploadPhoto } from "../../lib/photo-upload";
 const START_AT = new Date("2026-09-14T11:00:00+09:00").getTime();
 const END_AT = new Date("2026-09-18T13:30:00+09:00").getTime();
 const RESPONSE_DEADLINE = new Date("2026-09-13T23:59:59+09:00").getTime();
-const SURVEY_OPEN_AT = new Date("2026-09-18T13:00:00+09:00").getTime();
+const SURVEY_OPEN_AT = new Date("2026-09-18T12:00:00+09:00").getTime();
+const SURVEY_URL = "https://forms.gle/NpjGdEaW2Jw9zqaB6";
 
 type Photo = { id: string; caption: string; fileName: string; uploadedAt: string; url: string };
 
@@ -173,12 +174,14 @@ export function SurveyGate() {
   const [now, setNow] = useState(SURVEY_OPEN_AT - 1);
   useEffect(() => {
     const firstTick = window.setTimeout(() => setNow(Date.now()), 0);
-    const timer = window.setInterval(() => setNow(Date.now()), 60000);
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => { window.clearTimeout(firstTick); window.clearInterval(timer); };
   }, []);
   const open = now >= SURVEY_OPEN_AT;
   return <section className={`survey-gate ${open ? "is-open" : ""}`} id="survey">
-    <div><p className="eyebrow">FINAL CHECK</p><h2>설문조사는<br />마지막 날 열립니다.</h2><p>여러분의 익명 의견은 다음 Great Journey를 더 나은 경험으로 만드는 데 활용됩니다.</p></div>
-    <div className="survey-status"><small>{open ? "SURVEY OPEN" : "OPEN SCHEDULE"}</small><strong>9.18 FRI<br />13:00</strong><span>{open ? "설문 URL 준비 중" : "아직 열리지 않았습니다"}</span></div>
+    <div><p className="eyebrow">FINAL CHECK</p><h2>{open ? <>교육에 대한<br />의견을 남겨주세요.</> : <>설문조사는<br />낮 12시에 열립니다.</>}</h2><p>여러분의 의견은 다음 Great Journey를 더 나은 경험으로 만드는 데 활용됩니다.</p></div>
+    <div className="survey-status"><small>{open ? "SURVEY OPEN" : "OPEN SCHEDULE"}</small><strong>9.18 FRI<br />12:00</strong><span>{open ? "설문에 참여하실 수 있습니다." : "9월 18일 낮 12시부터 참여할 수 있습니다."}</span>
+      {open && <a href={SURVEY_URL} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: 52, marginTop: 20, padding: "12px 20px", background: "#111310", color: "#ffffff", fontSize: 16, fontWeight: 800, textDecoration: "none" }} aria-label="설문 참여하기 (새 창)">설문 참여하기 ↗</a>}
+    </div>
   </section>;
 }
