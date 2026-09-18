@@ -39,7 +39,7 @@ test("renders the education preparation guide and links it from the homepage", a
   assert.match(guide, /출장비 처리/);
   assert.match(guide, /KTX-산천 312/);
   assert.doesNotMatch(experience, /RESPONSE DEADLINE|9\.13 SUN · 23:59/);
-  assert.match(experience, /9\.18 FRI/);
+  assert.match(experience, /return <SurveyInvitation \/>/);
   assert.match(experience, /사진 업로드/);
   assert.match(experience, /셔틀버스 이동/);
   assert.match(experience, /자차 이동/);
@@ -49,6 +49,19 @@ test("renders the education preparation guide and links it from the homepage", a
   assert.match(content, /자기비저닝\(팀빌딩\)/);
   assert.match(content, /S-Factory 투어/);
   assert.doesNotMatch(`${home}${guide}${content}`, /9\.7–9\.11|date: "9\/7"|date: "9\/11"/);
+});
+
+test("offers the survey immediately on the homepage and guide with a QR code", async () => {
+  const home = await readFile(new URL("src/app/page.tsx", root), "utf8");
+  const survey = await readFile(new URL("src/app/SurveyInvitation.tsx", root), "utf8");
+  const qr = await readFile(new URL("public/images/survey-qr.png", root));
+  assert.match(home, /<SurveyInvitation home \/>/);
+  assert.ok(home.indexOf("<SurveyInvitation home") < home.indexOf('<section className="hero"'));
+  assert.match(survey, /https:\/\/forms\.gle\/NpjGdEaW2Jw9zqaB6/);
+  assert.match(survey, /지금 참여 가능/);
+  assert.match(survey, /survey-qr\.png/);
+  assert.doesNotMatch(survey, /Date\.now|disabled|SURVEY_OPEN_AT/);
+  assert.equal(qr.subarray(1, 4).toString(), "PNG");
 });
 
 test("keeps credentials and local data out of the public repository", async () => {

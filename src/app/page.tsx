@@ -4,6 +4,7 @@ import { useEffect, useState, type MouseEvent } from "react";
 import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../lib/content";
 import { fetchQuizFromSupabase, submitQuizToSupabase } from "../lib/supabase";
 import JourneyDday from "./JourneyDday";
+import SurveyInvitation from "./SurveyInvitation";
 
 const values = [
   { name: "창조", en: "CREATIVITY", copy: "익숙한 방식 너머의 가능성을 발견합니다." },
@@ -261,6 +262,8 @@ export default function Home() {
           <a className="header-cta" href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map 시작 <span>↘</span></a>
         </div>
       </header>
+
+      <SurveyInvitation home />
 
       <section className="hero" id="top">
         <img className="hero-image" src="/images/ai-field-hero.png" alt="미래 농업 현장과 스마트 온실" />

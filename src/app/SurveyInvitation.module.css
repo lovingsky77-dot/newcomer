@@ -1,0 +1,19 @@
+.section { display: flex; justify-content: space-between; align-items: center; gap: 32px; padding: 48px max(5.5vw, 24px); background: #111310; color: #fff; scroll-margin-top: 24px; }
+.home { padding-top: 120px; }
+.copy { min-width: 0; }
+.status { display: inline-block; color: #fff; border-left: 3px solid #ef3f23; padding-left: 10px; font-size: 14px; font-weight: 700; }
+.section .copy h2 { margin: 16px 0 12px; color: #fff; font-size: clamp(28px, 3.5vw, 48px); line-height: 1.2; letter-spacing: -.04em; }
+.section .copy p { margin: 0 0 24px; color: #d2d5ce; font-size: 16px; line-height: 1.6; }
+.section .button { display: inline-flex; align-items: center; justify-content: space-between; gap: 40px; min-height: 52px; padding: 12px 24px; background: #fff; color: #111310; font-size: 17px; font-weight: 800; text-decoration: none; }
+.button:hover { background: #f7f7f4; }
+.section a:focus-visible { outline: 3px solid #ef3f23; outline-offset: 5px; }
+.qr { flex: 0 0 auto; margin: 0; text-align: center; }
+.qr img { display: block; width: 164px; height: 164px; margin: 0 auto; background: #fff; }
+.qr figcaption { margin-top: 10px; color: #d2d5ce; font-size: 13px; }
+.section .download { display: inline-flex; align-items: center; min-height: 44px; color: #fff; font-size: 13px; text-underline-offset: 4px; }
+@media (max-width: 600px) {
+  .section { flex-direction: column; align-items: stretch; gap: 24px; padding: 32px 24px; }
+  .home { padding-top: 116px; }
+  .section .button { width: 100%; }
+  .qr img { width: 140px; height: 140px; }
+}
