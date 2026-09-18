@@ -5,6 +5,8 @@ import { defaultQuestions, schedules, type QuizQuestion, valueTypes } from "../l
 import { fetchQuizFromSupabase, submitQuizToSupabase } from "../lib/supabase";
 import JourneyDday from "./JourneyDday";
 import SurveyInvitation from "./SurveyInvitation";
+import EducationVideo from "./guide/EducationVideo";
+import PhotoGallery from "./PhotoGallery";
 
 const values = [
   { name: "창조", en: "CREATIVITY", copy: "익숙한 방식 너머의 가능성을 발견합니다." },
@@ -253,9 +255,9 @@ export default function Home() {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#top" onClick={(event) => scrollToSection(event, "top")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
+        <a className="brand" href="#survey" onClick={(event) => scrollToSection(event, "survey")} aria-label="대동 온보딩 홈"><img src="/images/daedong-logo.png" alt="DAEDONG" /></a>
         <nav aria-label="주요 메뉴">
-          <a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a><a href="#future" onClick={(event) => scrollToSection(event, "future")}>미래사업</a><a href="#vision" onClick={(event) => scrollToSection(event, "vision")}>Vision Map</a><a href="/inquiry">문의게시판</a>
+          <a href="#survey" onClick={(event) => scrollToSection(event, "survey")}>만족도 조사</a><a href="#video" onClick={(event) => scrollToSection(event, "video")}>교육 동영상</a><a href="#photos" onClick={(event) => scrollToSection(event, "photos")}>교육 사진</a><a href="#journey" onClick={(event) => scrollToSection(event, "journey")}>5일의 여정</a>
         </nav>
         <div className="header-actions">
           <a className="prep-utility-link" href="/guide"><small>CHECK</small><strong>참여 전 준비</strong><span>↗</span></a>
@@ -264,6 +266,8 @@ export default function Home() {
       </header>
 
       <SurveyInvitation home />
+      <EducationVideo />
+      <PhotoGallery />
 
       <section className="hero" id="top">
         <img className="hero-image" src="/images/ai-field-hero.png" alt="미래 농업 현장과 스마트 온실" />

@@ -19,18 +19,21 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
   return Response.json({ ok: true });
 }
 
-export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
+export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
   await ensureDatabase();
   const row = await getD1().prepare("SELECT object_key, content_type FROM education_photos WHERE id = ?").bind(id).first();
   if (!row) return new Response("Not found", { status: 404 });
   const object = await getMedia().get(String(row.object_key));
   if (!object) return new Response("Not found", { status: 404 });
+  const download = new URL(request.url).searchParams.get("download") === "1";
+  const extension = ({ "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/heic": "heic", "image/heif": "heif" } as Record<string, string>)[String(row.content_type)] || "jpg";
   return new Response(object.body, {
     headers: {
       "content-type": String(row.content_type || "application/octet-stream"),
       "cache-control": "public, max-age=31536000, immutable",
       "x-content-type-options": "nosniff",
+      ...(download ? { "content-disposition": `attachment; filename="DAEDONG-${id.replace(/[^a-zA-Z0-9_-]/g, "")}.${extension}"` } : {}),
     },
   });
 }

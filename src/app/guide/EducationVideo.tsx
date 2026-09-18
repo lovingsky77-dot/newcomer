@@ -3,7 +3,7 @@ import styles from "./EducationVideo.module.css";
 export default function EducationVideo() {
   return <section className={styles.section} id="video" aria-labelledby="education-video-title">
     <div className={styles.heading}>
-      <div><p className={styles.label}>GREAT JOURNEY · 2026</p><h2 id="education-video-title">교육 영상</h2><p>함께한 5일의 기록 · 2분 · Full HD</p></div>
+      <div><p className={styles.label}>02 / FILM</p><h2 id="education-video-title">교육 동영상</h2><p>함께한 5일의 기록 · 2분 · Full HD</p></div>
       <a className={styles.download} href="/videos/great-journey-2026-1080p.mp4" download="DAEDONG_Great_Journey_FullHD.mp4">영상 다운로드 <span aria-hidden="true">↓</span></a>
     </div>
     <video className={styles.player} controls playsInline preload="none" poster="/images/education-video-poster.jpg" aria-label="대동 Great Journey 교육 영상, 2분">

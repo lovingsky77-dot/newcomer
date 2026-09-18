@@ -58,6 +58,7 @@ test("offers the survey immediately on the homepage and guide with a QR code", a
   const survey = await readFile(new URL("src/app/SurveyInvitation.tsx", root), "utf8");
   const qr = await readFile(new URL("public/images/survey-qr.png", root));
   assert.match(home, /<SurveyInvitation home \/>/);
+  assert.match(home, /<SurveyInvitation home \/>\s*<EducationVideo \/>\s*<PhotoGallery \/>/);
   assert.ok(home.indexOf("<SurveyInvitation home") < home.indexOf('<section className="hero"'));
   assert.match(survey, /https:\/\/forms\.gle\/NpjGdEaW2Jw9zqaB6/);
   assert.match(survey, /지금 참여 가능/);

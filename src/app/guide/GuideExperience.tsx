@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { uploadPhoto } from "../../lib/photo-upload";
 import SurveyInvitation from "../SurveyInvitation";
+import galleryStyles from "../PhotoGallery.module.css";
 
 const START_AT = new Date("2026-09-14T11:00:00+09:00").getTime();
 const END_AT = new Date("2026-09-18T13:30:00+09:00").getTime();
@@ -158,6 +159,7 @@ export function PhotoBoard() {
         {photos.length > 1 && <div className="photo-controls"><button onClick={() => setActive((active - 1 + photos.length) % photos.length)} aria-label="이전 사진">←</button><button onClick={() => setActive((active + 1) % photos.length)} aria-label="다음 사진">→</button></div>}
       </div>
       <form className="photo-upload" onSubmit={upload}>
+        {current && <a className={galleryStyles.upload} style={{ background: "#fff", color: "#111310", marginBottom: 20 }} href={`${current.url}?download=1`} download={current.fileName}>현재 사진 다운로드 ↓</a>}
         <span className="upload-no">UPLOAD</span><h3>교육 사진 올리기</h3><p>JPG, PNG, WEBP, HEIC · 파일당 15MB<br />한 번에 최대 10장까지 선택할 수 있습니다.</p>
         <label className="file-picker"><input ref={fileInput} disabled={status === "uploading"} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple onChange={(e) => setFiles(Array.from(e.target.files || []).slice(0, 10))} /><span>{selectedText}</span><b>＋</b></label>
         <label className="caption-field">사진 설명 <span>선택</span><input value={caption} maxLength={120} onChange={(e) => setCaption(e.target.value)} placeholder="예: DAY 3, 대구공장에서" /></label>
